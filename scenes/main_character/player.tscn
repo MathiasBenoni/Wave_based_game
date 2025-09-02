@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://0kl88blhnul3"]
+
+[ext_resource type="Script" uid="uid://hog87forpqu0" path="res://scripts/player.gd" id="1_lmbwh"]
+[ext_resource type="Texture2D" uid="uid://bnku2bhw0mk6b" path="res://assets/sprites/character/idle.png" id="2_qpbvr"]
+[ext_resource type="Texture2D" uid="uid://qpetfo4yaukf" path="res://assets/sprites/character/walk1.png" id="3_dkw6s"]
+[ext_resource type="PackedScene" uid="uid://b1qavqp84tt5y" path="res://scenes/main_character/gun.tscn" id="3_gi2fm"]
+[ext_resource type="Texture2D" uid="uid://brag33x4ufo1n" path="res://assets/sprites/character/walk2.png" id="4_8bfeh"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qresl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_qpbvr")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_dkw6s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_8bfeh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_qpbvr")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_uin8l"]
+radius = 12.51
+
+[node name="player" type="CharacterBody2D"]
+position = Vector2(67, 46)
+scale = Vector2(0.5, 0.5)
+collision_layer = 255
+collision_mask = 255
+motion_mode = 1
+script = ExtResource("1_lmbwh")
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -11)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_qresl")
+
+[node name="camera" type="Camera2D" parent="."]
+visible = false
+zoom = Vector2(5, 5)
+
+[node name="hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(-2, -1)
+shape = SubResource("CircleShape2D_uin8l")
+
+[node name="gun" parent="." instance=ExtResource("3_gi2fm")]
+position = Vector2(-1, -3.5)
+
+[connection signal="body_entered" from="gun" to="." method="_on_gun_body_entered"]

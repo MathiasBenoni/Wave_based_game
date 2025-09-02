@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://b70udkwqjun7c"]
+
+[ext_resource type="Texture2D" uid="uid://n57f0vh65437" path="res://assets/sprites/coins/1.png" id="1_khip5"]
+[ext_resource type="Script" uid="uid://iwai4fkse2fg" path="res://scripts/coin.gd" id="1_klb0y"]
+[ext_resource type="Texture2D" uid="uid://m23h3efen04e" path="res://assets/sprites/coins/2.png" id="2_ao0wf"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ekljk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_khip5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ao0wf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lyxco"]
+radius = 6.0
+height = 18.0
+
+[node name="coin" type="Area2D"]
+script = ExtResource("1_klb0y")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ekljk")
+frame_progress = 0.89307
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_lyxco")
+
+[node name="timeout" type="Timer" parent="."]
+wait_time = 6.0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="timeout" to="." method="_on_timeout_timeout"]

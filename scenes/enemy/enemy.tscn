@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://vnvvaa0hjx8k"]
+
+[ext_resource type="Texture2D" uid="uid://p8vth31ylv2c" path="res://assets/sprites/enemy/enemy_1.png" id="1_0xc1j"]
+[ext_resource type="Script" uid="uid://d3o0wyavrwsuy" path="res://scripts/enemy.gd" id="1_v2ov6"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_435ot"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_0xc1j")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bwjj2"]
+radius = 25.0
+
+[node name="enemy" type="Area2D"]
+scale = Vector2(0.4, 0.4)
+script = ExtResource("1_v2ov6")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-2.49999, -4.5)
+scale = Vector2(1.71875, 1.71875)
+sprite_frames = SubResource("SpriteFrames_435ot")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.499992, -0.499996)
+shape = SubResource("CircleShape2D_bwjj2")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

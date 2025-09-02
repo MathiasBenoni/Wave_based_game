@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1qavqp84tt5y"]
+
+[ext_resource type="Script" uid="uid://bhommn6vcsabp" path="res://scripts/gun.gd" id="1_broll"]
+[ext_resource type="Texture2D" uid="uid://ckcri0kvpragn" path="res://assets/sprites/gun/gun_2.png" id="2_rrb8d"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_isux4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_rrb8d")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cgmmh"]
+size = Vector2(33, 9)
+
+[node name="gun" type="Area2D"]
+position = Vector2(0, 1)
+script = ExtResource("1_broll")
+
+[node name="cooldown" type="Timer" parent="."]
+process_callback = 0
+wait_time = 0.001
+one_shot = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(37, 23)
+scale = Vector2(1.40625, 1.40625)
+sprite_frames = SubResource("SpriteFrames_isux4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(25.5, -4.5)
+shape = SubResource("RectangleShape2D_cgmmh")
+
+[node name="barrel" type="Marker2D" parent="."]
+position = Vector2(43, -6)
+
+[node name="bullets" type="Node" parent="."]
+
+[connection signal="timeout" from="cooldown" to="." method="_on_cooldown_timeout"]
