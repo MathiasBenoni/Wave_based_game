@@ -18,6 +18,13 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	delta = delta
+	
+	if Input.is_action_just_pressed("esc"):
+		if $player/esc_menu.visible:
+			$player/esc_menu.hide()
+		else:
+			$player/esc_menu.show()
+	
 	pass
 
 func minus_life():

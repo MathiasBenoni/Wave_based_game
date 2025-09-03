@@ -10,8 +10,11 @@ config_version=5
 
 [application]
 
+config/name="Wave_based_game"
 run/main_scene="uid://ca051vklpv2o6"
 config/features=PackedStringArray("4.4")
+boot_splash/image="uid://dkq23wtyels6o"
+config/icon="uid://dkq23wtyels6o"
 
 [display]
 
@@ -46,6 +49,11 @@ move_left={
 shoot={
 "deadzone": 0.2,
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(1001, 6),"global_position":Vector2(1020, 102),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
+]
+}
+esc={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
 
