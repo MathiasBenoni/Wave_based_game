@@ -24,23 +24,32 @@ func _process(delta: float) -> void:
 	
 ################# Movement ###################
 
-	if Input.is_action_pressed("move_up"):
-		velocity.y = -move_speed * delta
-		#print(velocity.y)
-
-	if Input.is_action_pressed("move_left"):
-		velocity.x = -move_speed * delta
-
-	if Input.is_action_pressed("move_right"):
-		velocity.x = move_speed * delta
-
-	if Input.is_action_pressed("move_down"):
-		velocity.y = move_speed * delta
-
+	#if Input.is_action_pressed("move_up"):
+		#velocity.y = -move_speed * delta
+		##print(velocity.y)
+#
+	#if Input.is_action_pressed("move_left"):
+		#velocity.x = -move_speed * delta
+#
+	#if Input.is_action_pressed("move_right"):
+		#velocity.x = move_speed * delta
+#
+	#if Input.is_action_pressed("move_down"):
+		#velocity.y = move_speed * delta
+#
+		#
+	#move_and_collide(velocity)
+	#velocity = Vector2.ZERO
 		
-	move_and_collide(velocity)
-	velocity = Vector2.ZERO
-	
+			
+	var input_vector = Vector2.ZERO
+
+	input_vector.x = Input.get_axis("move_left", "move_right")
+	input_vector.y = Input.get_axis("move_up", "move_down")
+
+	velocity = input_vector.normalized() * move_speed
+	move_and_collide(velocity * delta)
+
 ##############################################
 
 

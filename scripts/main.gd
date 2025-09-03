@@ -6,6 +6,8 @@ var spawn
 var number_of_enemies = 12
 
 func _ready() -> void:
+	$player/esc_menu.process_mode = Node.PROCESS_MODE_WHEN_PAUSED 
+	$player/esc_menu.hide()
 	for n in number_of_enemies:
 		var enemy = enemy_scene.instantiate()
 		spawn = randi_range(0, 2)
@@ -16,17 +18,34 @@ func _ready() -> void:
 		$enemies.add_child(enemy)
 
 
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("esc"):
+		pause()
+
+func pause():
+	
+	if $player/esc_menu.visible:
+		$player/esc_menu.hide()
+		get_tree().paused = false
+	else:
+		$player/esc_menu.show()
+		get_tree().paused = true
+
 func _process(delta: float) -> void:
 	delta = delta
 	
-	if Input.is_action_just_pressed("esc"):
-		if $player/esc_menu.visible:
-			$player/esc_menu.hide()
-		else:
-			$player/esc_menu.show()
+	
 	
 	pass
 
 func minus_life():
 	$player.position = $base.position
 	print("-1 life")
+
+
+func _on_continue_pressed() -> void:
+	pause()
+
+
+func _on_quit_pressed() -> void:
+	get_tree().quit()
