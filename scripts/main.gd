@@ -21,6 +21,12 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("esc"):
 		pause()
+		
+	if Input.is_action_just_pressed("test_key"):
+		$player/shop.show()
+	
+	if Input.is_action_just_released("test_key"):
+		$player/shop.hide()
 
 func pause():
 	
@@ -49,3 +55,7 @@ func _on_continue_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_button_pressed() -> void:
+	print("Test1")
