@@ -7,6 +7,8 @@
 radius = 4.0
 
 [node name="bullet" type="CharacterBody2D"]
+position = Vector2(1, 0)
+collision_mask = 129
 script = ExtResource("1_iutut")
 metadata/_edit_group_ = true
 

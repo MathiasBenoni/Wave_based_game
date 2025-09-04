@@ -45,6 +45,7 @@ func _on_body_entered(body: Node2D) -> void:
 		
 		var coin = coin_scene.instantiate()
 		coin.position = position
+		# ?
 		get_tree().get_root().get_node("main/coins").add_child(coin)
 		#emit_signal("make_coin")
 		queue_free()
