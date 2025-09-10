@@ -1,11 +1,20 @@
-[gd_scene load_steps=6 format=3 uid="uid://b70udkwqjun7c"]
+[gd_scene load_steps=7 format=3 uid="uid://b70udkwqjun7c"]
 
 [ext_resource type="Texture2D" uid="uid://n57f0vh65437" path="res://assets/sprites/coins/1.png" id="1_khip5"]
 [ext_resource type="Script" uid="uid://iwai4fkse2fg" path="res://scripts/coin.gd" id="1_klb0y"]
 [ext_resource type="Texture2D" uid="uid://m23h3efen04e" path="res://assets/sprites/coins/2.png" id="2_ao0wf"]
+[ext_resource type="Texture2D" uid="uid://du1c114rtldgx" path="res://assets/sprites/coins/ash.png" id="2_d14el"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ekljk"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_d14el")
+}],
+"loop": true,
+"name": &"ash",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_khip5")
@@ -27,7 +36,7 @@ script = ExtResource("1_klb0y")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ekljk")
-frame_progress = 0.89307
+animation = &"ash"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_lyxco")

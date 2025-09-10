@@ -1,7 +1,8 @@
 extends CharacterBody2D
 
-@onready var sprint = $camera/CanvasLayer/sprint
+#@onready var sprint = $camera/CanvasLayer/sprint
 
+@export var sprint := 100
 @export var health := 100
 
 var normal_speed = 100
@@ -19,6 +20,7 @@ func player():
 
 func _process(delta: float) -> void:
 	
+	$camera/CanvasLayer/sprint.value = sprint
 	$camera/CanvasLayer/health.value = health
 	
 ############ Snur spritet ####################
@@ -47,9 +49,9 @@ func _process(delta: float) -> void:
 	######################### Sprint #############################
 	
 	if Input.is_action_pressed("sprint") and (velocity.x != 0 or velocity.y != 0):
-			sprint.value -= 40 * delta
+			sprint -= 40 * delta
 			move_speed = boost_speed
-	if Input.is_action_just_released("sprint") or sprint.value == 0:
+	if Input.is_action_just_released("sprint") or sprint == 0:
 		move_speed = normal_speed
 	
 		

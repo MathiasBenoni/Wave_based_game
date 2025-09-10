@@ -33,7 +33,10 @@ func _process(delta: float) -> void:
 	#position += velocity * delta
 
 
-
+	for overlapped_body in get_overlapping_bodies():
+		if overlapped_body.name == "player":
+			get_tree().get_root().get_node("main").minus_life()
+		#print("hit: ", overlapped_body.name)
 
 
 
@@ -49,6 +52,3 @@ func _on_body_entered(body: Node2D) -> void:
 		get_tree().get_root().get_node("main/coins").add_child(coin)
 		#emit_signal("make_coin")
 		queue_free()
-	
-	if body.has_method("player"):
-		get_tree().get_root().get_node("main").minus_life()

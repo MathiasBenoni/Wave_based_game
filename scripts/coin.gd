@@ -4,10 +4,11 @@ func coin():
 	pass
 
 func _ready() -> void:
-	$timeout.start()
+	pass
 
 func _process(delta: float) -> void:
-	$AnimatedSprite2D.play()
+	delta = delta
+	$AnimatedSprite2D.play("ash")
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.has_method("player"):

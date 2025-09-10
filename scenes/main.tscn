@@ -76,7 +76,7 @@ z_index = -1
 position = Vector2(500, 287)
 
 [node name="player" parent="." instance=ExtResource("1_misob")]
-position = Vector2(424, 226)
+position = Vector2(442, 260)
 
 [node name="esc_menu" type="CanvasLayer" parent="player"]
 visible = false
