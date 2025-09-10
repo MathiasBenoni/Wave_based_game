@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://0kl88blhnul3"]
+[gd_scene load_steps=10 format=3 uid="uid://0kl88blhnul3"]
 
 [ext_resource type="Script" uid="uid://hog87forpqu0" path="res://scripts/player.gd" id="1_lmbwh"]
 [ext_resource type="Texture2D" uid="uid://bnku2bhw0mk6b" path="res://assets/sprites/character/idle.png" id="2_qpbvr"]
 [ext_resource type="Texture2D" uid="uid://qpetfo4yaukf" path="res://assets/sprites/character/walk1.png" id="3_dkw6s"]
 [ext_resource type="PackedScene" uid="uid://b1qavqp84tt5y" path="res://scenes/main_character/gun.tscn" id="3_gi2fm"]
 [ext_resource type="Texture2D" uid="uid://brag33x4ufo1n" path="res://assets/sprites/character/walk2.png" id="4_8bfeh"]
+[ext_resource type="Texture2D" uid="uid://cli5twyfbuk57" path="res://assets/sprites/character/healthbar_placeholder.png" id="5_4d8ha"]
+[ext_resource type="Texture2D" uid="uid://cxxav8huwpjb5" path="res://assets/sprites/character/placeholder.png" id="6_ancg7"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_qresl"]
 animations = [{
@@ -42,6 +44,9 @@ collision_mask = 255
 motion_mode = 1
 script = ExtResource("1_lmbwh")
 
+[node name="gun" parent="." instance=ExtResource("3_gi2fm")]
+position = Vector2(-1, -3.5)
+
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -11)
 scale = Vector2(2, 2)
@@ -51,11 +56,47 @@ animation = &"walk"
 [node name="camera" type="Camera2D" parent="."]
 zoom = Vector2(5, 5)
 
+[node name="CanvasLayer" type="CanvasLayer" parent="camera"]
+layer = 0
+
+[node name="sprint" type="TextureProgressBar" parent="camera/CanvasLayer"]
+z_index = -1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -39.0
+offset_top = 38.0
+offset_right = 40.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 100.0
+fill_mode = 6
+nine_patch_stretch = true
+texture_progress = ExtResource("6_ancg7")
+
+[node name="health" type="TextureProgressBar" parent="camera/CanvasLayer"]
+z_index = -1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -101.0
+offset_right = 51.0
+offset_bottom = -74.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 8
+value = 100.0
+nine_patch_stretch = true
+texture_progress = ExtResource("5_4d8ha")
+
 [node name="hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(-2, -1)
 shape = SubResource("CircleShape2D_uin8l")
-
-[node name="gun" parent="." instance=ExtResource("3_gi2fm")]
-position = Vector2(-1, -3.5)
 
 [connection signal="body_entered" from="gun" to="." method="_on_gun_body_entered"]

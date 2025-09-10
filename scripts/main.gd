@@ -9,6 +9,9 @@ var ispostwavetrue = false
 
 
 func _ready() -> void:
+	
+	$player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1.custom_minimum_size = Vector2(179	,10)
+
 	$player/post_wave.visible = false
 	$player/esc_menu.process_mode = Node.PROCESS_MODE_WHEN_PAUSED 
 	Node.PROCESS_MODE_WHEN_PAUSED
@@ -62,7 +65,7 @@ func pause():
 
 
 func minus_life():
-	$player.position = $base.position
+	$player.health -= 10
 	print("-1 life")
 
 

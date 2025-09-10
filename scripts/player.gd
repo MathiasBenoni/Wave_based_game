@@ -1,9 +1,17 @@
 extends CharacterBody2D
 
-var move_speed : int = 100
+@onready var sprint = $camera/CanvasLayer/sprint
+
+@export var health := 100
+
+var normal_speed = 100
+var boost_speed = 150
+
+var move_speed = 0
 
 
 func _ready() -> void:
+	move_speed = normal_speed
 	pass
 
 func player():
@@ -11,6 +19,7 @@ func player():
 
 func _process(delta: float) -> void:
 	
+	$camera/CanvasLayer/health.value = health
 	
 ############ Snur spritet ####################
 
@@ -35,9 +44,20 @@ func _process(delta: float) -> void:
 	velocity = input_vector.normalized() * move_speed
 	move_and_collide(velocity * delta)
 	
+	######################### Sprint #############################
 	
+	if Input.is_action_pressed("sprint") and (velocity.x != 0 or velocity.y != 0):
+			sprint.value -= 40 * delta
+			move_speed = boost_speed
+	if Input.is_action_just_released("sprint") or sprint.value == 0:
+		move_speed = normal_speed
+	
+		
+
+		
 
 ##############################################
+
 
 
 ################# REMOVABLE ##################
