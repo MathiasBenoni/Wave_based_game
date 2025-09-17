@@ -32,6 +32,7 @@ radius = 6.0
 height = 18.0
 
 [node name="coin" type="Area2D"]
+collision_layer = 64
 script = ExtResource("1_klb0y")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -42,7 +43,7 @@ animation = &"ash"
 shape = SubResource("CapsuleShape2D_lyxco")
 
 [node name="timeout" type="Timer" parent="."]
-wait_time = 6.0
+wait_time = 0.5
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="timeout" to="." method="_on_timeout_timeout"]

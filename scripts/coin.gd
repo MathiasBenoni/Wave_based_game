@@ -1,5 +1,9 @@
 extends Area2D
 
+signal money
+
+var isColliding = false
+
 func coin():
 	pass
 
@@ -9,13 +13,21 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	delta = delta
 	$AnimatedSprite2D.play("ash")
-
-func _on_body_entered(body: Node2D) -> void:
-	if body.has_method("player"):
-		print("+1 coin")
-		queue_free()
+	
 		
 
+#func _on_body_entered(body: Node2D) -> void:
+	#if body.has_method("player") and isColliding == false:
+		#queue_free()
+		#get_tree().get_root().get_node("main").coin()
+		#isColliding = true
+		#
+func _on_body_entered(body: Node2D) -> void:
+	if body.has_method("player"):
+		get_tree().get_root().get_node("main").coin()
+		call_deferred("queue_free")
 
-func _on_timeout_timeout() -> void:
-	queue_free()
+	#if body.has_method("player"):
+		#queue_free()
+		##body.coin()
+		#print("+1 coin")

@@ -7,13 +7,17 @@ extends CharacterBody2D
 
 var normal_speed = 100
 var boost_speed = 150
-
+var number_of_coins := 0
 var move_speed = 0
 
 
 func _ready() -> void:
 	move_speed = normal_speed
 	pass
+	
+	
+func coin():
+	get_tree().get_root().get_node("main").coin()
 
 func player():
 	pass
@@ -22,6 +26,7 @@ func _process(delta: float) -> void:
 	
 	$camera/CanvasLayer/sprint.value = sprint
 	$camera/CanvasLayer/health.value = health
+
 	
 ############ Snur spritet ####################
 

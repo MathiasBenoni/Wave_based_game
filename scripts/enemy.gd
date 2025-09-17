@@ -4,6 +4,7 @@ var SPEED : int = 50
 var base
 var target
 var coin_scene = preload("res://scenes/coin.tscn")
+var spredning = 20
 
 signal minus_life
 
@@ -47,8 +48,7 @@ func _on_body_entered(body: Node2D) -> void:
 		body.queue_free()
 		
 		var coin = coin_scene.instantiate()
-		coin.position = position
-		# ?
-		get_tree().get_root().get_node("main/coins").add_child(coin)
-		#emit_signal("make_coin")
+		coin.position = Vector2(position.x + randf_range(-spredning, spredning), position.y + randf_range(-spredning, spredning))
+		get_tree().get_root().get_node("main/coins").call_deferred("add_child", coin)
+				
 		queue_free()

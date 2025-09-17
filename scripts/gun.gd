@@ -2,9 +2,14 @@ extends Area2D
 
 var bullet_scene = preload("res://scenes/main_character/bullet.tscn")
 
+@export var firerate := 0.5
+
+
+
 var is_hot = false
 
 func _ready() -> void:
+	$cooldown.wait_time = firerate
 	pass
 
 

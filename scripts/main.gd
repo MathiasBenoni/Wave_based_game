@@ -3,10 +3,66 @@ extends Node
 
 var enemy_scene = preload("res://scenes/enemy/enemy.tscn")
 var spawn
-var number_of_enemies = 12
+var number_of_enemies = 5
 var ispostwavetrue = false
 var numberOfWaves = 0
 var startPos = Vector2(450,280)
+var numberOfCoins := 0
+
+@onready var upgrade1 = $player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1
+@onready var upgrade2 = $player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade2
+@onready var upgrade3 = $player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade3
+@onready var upgrade4 = $player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade4
+
+
+var upgrades_list = [
+	{
+		"id": 0,
+		"name": "Speed Boost",
+		"description": "Increases movement speed by 20%",
+		"cost": 50,
+		"effect": "speed_boost"
+	},
+	{
+		"id": 1,
+		"name": "Double Jump",
+		"description": "Allows double jumping",
+		"cost": 100,
+		"effect": "double_jump"
+	},
+	{
+		"id": 2,
+		"name": "Extra Health",
+		"description": "Adds 25 health points",
+		"cost": 75,
+		"effect": "extra_health"
+	},
+	{
+		"id": 3,
+		"name": "Coin Magnet",
+		"description": "Attracts coins from farther away",
+		"cost": 80,
+		"effect": "coin_magnet"
+	},
+	{
+		"id": 4,
+		"name": "Damage Boost",
+		"description": "Increases damage by 30%",
+		"cost": 120,
+		"effect": "damage_boost"
+	},
+	{
+		"id": 5,
+		"name": "Shield",
+		"description": "Temporary invincibility",
+		"cost": 90,
+		"effect": "shield"
+	}
+]
+
+
+
+
 
 func _ready() -> void:
 	
@@ -42,8 +98,9 @@ func nextWave():
 	spawnEnemies()
 
 
+
 func spawnEnemies():
-	for n in number_of_enemies:
+	for n in number_of_enemies * round(numberOfWaves * 0.5):
 		var enemy = enemy_scene.instantiate()
 		spawn = randi_range(0, 2)
 		if spawn == 1:
@@ -65,18 +122,18 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	delta = delta
-	
-	
 	if $enemies.get_child_count() == 0:
-		
 		post_wave()
-		
-		
 		if Input.is_action_just_pressed("enter"):
 			$player/post_wave.visible = false
 			ispostwavetrue = false
 			print("Shop!")
 			shop()
+		
+
+
+
+
 
 
 func pause():
@@ -88,6 +145,11 @@ func pause():
 		$player/esc_menu.show()
 		get_tree().paused = true
 
+
+func coin():
+	numberOfCoins += 1
+	$player/shop/VBoxContainer2/HBoxContainer/coins.text = str(numberOfCoins)
+	print("Coins: " + str(numberOfCoins))
 
 
 func minus_life():
@@ -113,10 +175,6 @@ func _on_continue_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
-
-
-	
-	
 
 
 func _on_upgrade_1_pressed() -> void:

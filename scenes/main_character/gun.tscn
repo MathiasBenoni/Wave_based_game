@@ -24,7 +24,6 @@ script = ExtResource("1_broll")
 
 [node name="cooldown" type="Timer" parent="."]
 process_callback = 0
-wait_time = 0.001
 one_shot = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
