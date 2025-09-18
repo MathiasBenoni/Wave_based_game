@@ -2,9 +2,10 @@ extends CharacterBody2D
 
 #@onready var sprint = $camera/CanvasLayer/sprint
 
-@export var sprint := 100
-@export var health := 100
+@export var sprint := 100.0
+@export var max_health := 100
 
+var current_health := 100.0
 var normal_speed = 100
 var boost_speed = 150
 var number_of_coins := 0
@@ -25,7 +26,7 @@ func player():
 func _process(delta: float) -> void:
 	
 	$camera/CanvasLayer/sprint.value = sprint
-	$camera/CanvasLayer/health.value = health
+	$camera/CanvasLayer/health.value = current_health
 
 	
 ############ Snur spritet ####################

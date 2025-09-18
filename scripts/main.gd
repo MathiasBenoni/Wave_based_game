@@ -9,68 +9,193 @@ var numberOfWaves = 0
 var startPos = Vector2(450,280)
 var numberOfCoins := 0
 
-@onready var upgrade1 = $player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1
-@onready var upgrade2 = $player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade2
-@onready var upgrade3 = $player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade3
-@onready var upgrade4 = $player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade4
-
 
 var upgrades_list = [
 	{
 		"id": 0,
 		"name": "Speed Boost",
 		"description": "Increases movement speed by 20%",
-		"cost": 50,
-		"effect": "speed_boost"
+		"cost": 5,
+		"effect": "speed_boost",
+		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
 		"id": 1,
 		"name": "Double Jump",
 		"description": "Allows double jumping",
-		"cost": 100,
-		"effect": "double_jump"
+		"cost": 3,
+		"effect": "sprint",
+		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
 		"id": 2,
 		"name": "Extra Health",
 		"description": "Adds 25 health points",
-		"cost": 75,
-		"effect": "extra_health"
+		"cost": 2,
+		"effect": "extra_health",
+		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
 		"id": 3,
 		"name": "Coin Magnet",
 		"description": "Attracts coins from farther away",
-		"cost": 80,
-		"effect": "coin_magnet"
+		"cost": 1,
+		"effect": "coin_magnet",
+		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
 		"id": 4,
 		"name": "Damage Boost",
 		"description": "Increases damage by 30%",
-		"cost": 120,
-		"effect": "damage_boost"
+		"cost": 1,
+		"effect": "damage_boost",
+		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
 		"id": 5,
 		"name": "Shield",
 		"description": "Temporary invincibility",
 		"cost": 90,
-		"effect": "shield"
+		"effect": "shield",
+		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	}
 ]
 
+func set_upgrade_to_button(upgrade_id: int, button_position: int):
+	# Validate inputs
+	if upgrade_id >= upgrades_list.size() or upgrade_id < 0:
+		print("Error: Invalid upgrade_id: ", upgrade_id)
+		return
+	
+	if button_position < 1 or button_position > 4:
+		print("Error: Invalid button_position: ", button_position, " (should be 1-4)")
+		return
+	
+	# Get the upgrade data
+	var upgrade_data = upgrades_list[upgrade_id]
+	
+	# Get the button node path based on position
+	var button_path = ""
+	var texture_rect_path = ""
+	match button_position:
+		1:
+			button_path = "player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1"
+			texture_rect_path = "player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/TextureRect"
+		2:
+			button_path = "player/shop/VBoxContainer/VBoxContainer2/VBoxContainer/upgrade2"
+			texture_rect_path = "player/shop/VBoxContainer/VBoxContainer2/VBoxContainer/TextureRect"
+		3:
+			button_path = "player/shop/VBoxContainer/VBoxContainer3/VBoxContainer/upgrade3"
+			texture_rect_path = "player/shop/VBoxContainer/VBoxContainer3/VBoxContainer/TextureRect"
+		4:
+			button_path = "player/shop/VBoxContainer/VBoxContainer4/VBoxContainer/upgrade4"
+			texture_rect_path = "player/shop/VBoxContainer/VBoxContainer4/VBoxContainer/TextureRect"
+	
+	# Get the button node
+	var button_node = get_node(button_path)
+	var texture_rect = get_node(texture_rect_path)
+	
+	if not button_node:
+		print("Error: Could not find button at path: ", button_path)
+		return
+	
+	if not texture_rect:
+		print("Error: Could not find TextureRect at path: ", texture_rect_path)
+		return
+	
+	# Update button text and properties
+	button_node.text = str(upgrade_data.cost)
+	texture_rect.texture = upgrade_data.icon
+	
+	# Store upgrade data in the button for later use
+	button_node.set_meta("upgrade_data", upgrade_data)
+	
+	# Connect button signal if not already connected
+	if not button_node.pressed.is_connected(_on_upgrade_button_pressed):
+		button_node.pressed.connect(_on_upgrade_button_pressed.bind(button_node))
+	
+	print("Set upgrade '", upgrade_data.name, "' to button position ", button_position)
+
+func randomize_shop():
+	var available_upgrades = range(upgrades_list.size())  # [0, 1, 2, 3, 4, 5]
+	available_upgrades.shuffle()
+	
+	# Assign first 4 random upgrades to the 4 buttons
+	for i in range(4):
+		var upgrade_id = available_upgrades[i]
+		var button_position = i + 1
+		set_upgrade_to_button(upgrade_id, button_position)
+
+# Function to handle button presses
+func _on_upgrade_button_pressed(button):
+	var upgrade_data = button.get_meta("upgrade_data")
+	
+	# Check if player has enough money (replace with your money system)
+	var player_money = get_player_money()  # You'll need to implement this
+	
+	if player_money >= upgrade_data.cost:
+		# Deduct money
+		spend_money(upgrade_data.cost)  # You'll need to implement this
+		
+		# Apply the upgrade effect
+		apply_upgrade_effect(upgrade_data.effect)
+		
+		print("Purchased: ", upgrade_data.name)
+		
+		nextWave()
+		
+	else:
+		print("Not enough money! Need: ", upgrade_data.cost, " Have: ", player_money)
+
+
+func apply_upgrade_effect(effect: String):
+	# Connect this to your game systems
+	match effect:
+		"speed_boost":
+			# Increase player speed
+			get_player().speed_multiplier += 0.2
+		"sprint":
+			# Enable sprint
+			get_player().can_sprint = true
+		"extra_health":
+			# Add health
+			get_player().max_health += 25
+			get_player().current_health += 25
+		"coin_magnet":
+			# Increase coin collection radius
+			get_player().coin_magnet_radius += 50
+		"damage_boost":
+			# Increase damage
+			get_player().damage_multiplier += 0.3
+		"shield":
+			# Activate shield
+			get_player().activate_shield(5.0)  # 5 seconds
+		_:
+			print("Unknown effect: ", effect)
+
+func get_player_money() -> int:
+	# Replace with your actual money system
+	return numberOfCoins
+
+func spend_money(amount: int):
+	# Replace with your actual money system
+	numberOfCoins -= amount
+
+func get_player():
+	# Replace with your actual player reference
+	return get_tree().get_root().get_node("main/player")
 
 
 
 
 func _ready() -> void:
 	
+	randomize_shop()
 	$player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1.custom_minimum_size = Vector2(179	,10)
 
 	$player/post_wave.visible = false
 	$player/esc_menu.process_mode = Node.PROCESS_MODE_WHEN_PAUSED 
-	Node.PROCESS_MODE_WHEN_PAUSED
+
 	$player/esc_menu.hide()
 	$player/shop.hide()
 	nextWave()
@@ -83,9 +208,10 @@ func nextWave():
 	$player/esc_menu.hide()
 	$player/shop.hide()
 	$player.position = Vector2(450,280)
-	$player.health = 100
+	$player.current_health = $player.max_health
 	$player.sprint = 100
 	numberOfWaves += 1
+	print("HEALTH ", str($player.max_health))
 	
 	for n in $coins.get_children():
 		$coins.remove_child(n)
@@ -110,6 +236,7 @@ func spawnEnemies():
 		$enemies.add_child(enemy)
 
 func _input(event: InputEvent) -> void:
+	event = event
 	if Input.is_action_just_pressed("esc"):
 		pause()
 		
@@ -153,7 +280,7 @@ func coin():
 
 
 func minus_life():
-	$player.health -= 10
+	$player.current_health -= 10
 	$player/hitbox.disabled = true
 	await get_tree().create_timer(1).timeout
 	$player/hitbox.disabled = false
@@ -175,20 +302,3 @@ func _on_continue_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
-
-
-func _on_upgrade_1_pressed() -> void:
-	print("Button 1 pressed")
-	nextWave()
-
-func _on_upgrade_2_pressed() -> void:
-	print("Button 2 pressed")
-	nextWave()
-
-func _on_upgrade_3_pressed() -> void:
-	print("Button 3 pressed")
-	nextWave()
-
-func _on_upgrade_4_pressed() -> void:
-	print("Button 4 pressed")
-	nextWave()

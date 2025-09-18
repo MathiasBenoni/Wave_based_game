@@ -1,6 +1,5 @@
 extends Area2D
 
-signal money
 
 var isColliding = false
 

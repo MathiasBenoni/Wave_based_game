@@ -6,7 +6,6 @@ var target
 var coin_scene = preload("res://scenes/coin.tscn")
 var spredning = 20
 
-signal minus_life
 
 func enemy():
 	pass
