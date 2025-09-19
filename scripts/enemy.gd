@@ -35,19 +35,20 @@ func _process(delta: float) -> void:
 
 	for overlapped_body in get_overlapping_bodies():
 		if overlapped_body.name == "player":
+			if overlapped_body.is_dashing == true:
+				die()
 			get_tree().get_root().get_node("main").minus_life()
 		#print("hit: ", overlapped_body.name)
 
 
-
+func die():
+	var coin = coin_scene.instantiate()
+	coin.position = Vector2(position.x + randf_range(-spredning, spredning), position.y + randf_range(-spredning, spredning))
+	get_tree().get_root().get_node("main/coins").call_deferred("add_child", coin)
+	queue_free()
 
 func _on_body_entered(body: Node2D) -> void:
 	
 	if body.has_method("bullet"):
 		body.queue_free()
-		
-		var coin = coin_scene.instantiate()
-		coin.position = Vector2(position.x + randf_range(-spredning, spredning), position.y + randf_range(-spredning, spredning))
-		get_tree().get_root().get_node("main/coins").call_deferred("add_child", coin)
-				
-		queue_free()
+		die()

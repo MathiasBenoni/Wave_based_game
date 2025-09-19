@@ -78,6 +78,7 @@ position = Vector2(500, 287)
 
 [node name="player" parent="." instance=ExtResource("1_misob")]
 position = Vector2(442, 260)
+dash_speed = 150.0
 
 [node name="esc_menu" type="CanvasLayer" parent="player"]
 visible = false
@@ -152,6 +153,7 @@ text = "Quit"
 
 [node name="shop" type="CanvasLayer" parent="player"]
 layer = 2
+visible = false
 
 [node name="TextureRect" type="TextureRect" parent="player/shop"]
 z_index = -1

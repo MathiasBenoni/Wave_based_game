@@ -8,6 +8,10 @@ var ispostwavetrue = false
 var numberOfWaves = 0
 var startPos = Vector2(450,280)
 var numberOfCoins := 0
+var temp_damage := 0.0
+
+@export var damage := 10.0
+
 
 
 var upgrades_list = [
@@ -15,7 +19,7 @@ var upgrades_list = [
 		"id": 0,
 		"name": "Speed Boost",
 		"description": "Increases movement speed by 20%",
-		"cost": 5,
+		"cost": 0,
 		"effect": "speed_boost",
 		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
@@ -36,14 +40,6 @@ var upgrades_list = [
 		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
-		"id": 3,
-		"name": "Coin Magnet",
-		"description": "Attracts coins from farther away",
-		"cost": 1,
-		"effect": "coin_magnet",
-		"icon": preload("res://assets/sprites/gun/placeholder.png")
-	},
-	{
 		"id": 4,
 		"name": "Damage Boost",
 		"description": "Increases damage by 30%",
@@ -54,10 +50,34 @@ var upgrades_list = [
 	{
 		"id": 5,
 		"name": "Shield",
-		"description": "Temporary invincibility",
-		"cost": 90,
+		"description": "Shield for + 2 hitpoints for the base",
+		"cost": 6,
 		"effect": "shield",
 		"icon": preload("res://assets/sprites/gun/placeholder.png")
+	},
+	{
+		"id": 6,
+		"name": "Defenders",
+		"description": "Towers around the base to defend",
+		"cost": 10,
+		"effect": "towers",
+		"icon": preload("res://assets/sprites/gun/placeholder.png")
+	},
+	{
+		"id": 7,
+		"name": "Dash - cooldown",
+		"description": "Decreese cooldown of dash",
+		"cost": 10,
+		"effect": "dash_cooldown",
+		"icon": preload("res://assets/sprites/gun/placeholder.png")
+	},
+	{
+		"id": 8,
+		"name": "Dash - speed",
+		"description": "Increese speed of dash",
+		"cost": 1,
+		"effect": "dash_speed",
+		"icon": preload("res://assets/sprites/character/placeholder.png")
 	}
 ]
 
@@ -130,12 +150,11 @@ func randomize_shop():
 func _on_upgrade_button_pressed(button):
 	var upgrade_data = button.get_meta("upgrade_data")
 	
-	# Check if player has enough money (replace with your money system)
-	var player_money = get_player_money()  # You'll need to implement this
+	var player_money = get_player_money() 
 	
 	if player_money >= upgrade_data.cost:
 		# Deduct money
-		spend_money(upgrade_data.cost)  # You'll need to implement this
+		spend_money(upgrade_data.cost)
 		
 		# Apply the upgrade effect
 		apply_upgrade_effect(upgrade_data.effect)
@@ -149,27 +168,28 @@ func _on_upgrade_button_pressed(button):
 
 
 func apply_upgrade_effect(effect: String):
-	# Connect this to your game systems
+	
 	match effect:
 		"speed_boost":
 			# Increase player speed
-			get_player().speed_multiplier += 0.2
+			get_player().speed_multiplier += 0.02
 		"sprint":
-			# Enable sprint
+			if get_player().can_sprint == true:
+				get_player().sprint_multiplier += 0.02
 			get_player().can_sprint = true
+			
 		"extra_health":
-			# Add health
 			get_player().max_health += 25
 			get_player().current_health += 25
-		"coin_magnet":
-			# Increase coin collection radius
-			get_player().coin_magnet_radius += 50
 		"damage_boost":
 			# Increase damage
 			get_player().damage_multiplier += 0.3
 		"shield":
 			# Activate shield
 			get_player().activate_shield(5.0)  # 5 seconds
+		"dash_speed":
+			get_player().dash_speed *= 1.2
+			print("Dash speed: " + str(get_player().dash_speed))
 		_:
 			print("Unknown effect: ", effect)
 
@@ -189,7 +209,6 @@ func get_player():
 
 
 func _ready() -> void:
-	
 	randomize_shop()
 	$player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1.custom_minimum_size = Vector2(179	,10)
 
@@ -212,7 +231,8 @@ func nextWave():
 	$player.sprint = 100
 	numberOfWaves += 1
 	print("HEALTH ", str($player.max_health))
-	
+	$player.normal_speed = $player.normal_speed * $player.speed_multiplier
+	$player.can_sprint = true
 	for n in $coins.get_children():
 		$coins.remove_child(n)
 		n.queue_free()
@@ -280,11 +300,8 @@ func coin():
 
 
 func minus_life():
-	$player.current_health -= 10
-	$player/hitbox.disabled = true
-	await get_tree().create_timer(1).timeout
-	$player/hitbox.disabled = false
-	
+	$player.take_damage(damage)
+		
 
 func post_wave():
 	$player/post_wave.visible = true
@@ -293,6 +310,7 @@ func post_wave():
 
 
 func shop():
+	randomize_shop()
 	$player/shop.visible = true
 	pass
 
