@@ -7,6 +7,12 @@ var coin_scene = preload("res://scenes/coin.tscn")
 var spredning = 20
 
 
+var max_health := 100.0
+
+var health = max_health
+
+
+
 func enemy():
 	pass
 
@@ -47,8 +53,24 @@ func die():
 	get_tree().get_root().get_node("main/coins").call_deferred("add_child", coin)
 	queue_free()
 
+func take_damage(body):
+	
+	var damage = body.damage
+	health -= damage
+	
+	body.queue_free()
+	
+	
+	
+	if health <= 0:
+		die()
+		
+	$AnimatedSprite2D.play("damaged")
+	await get_tree().create_timer(0.1).timeout
+	$AnimatedSprite2D.play("default")
+
+
 func _on_body_entered(body: Node2D) -> void:
 	
 	if body.has_method("bullet"):
-		body.queue_free()
-		die()
+		take_damage(body)

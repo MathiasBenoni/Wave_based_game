@@ -28,7 +28,7 @@ var upgrades_list = [
 		"name": "Double Jump",
 		"description": "Allows double jumping",
 		"cost": 3,
-		"effect": "sprint",
+		"effect": "sprint, shift to use",
 		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
@@ -68,7 +68,7 @@ var upgrades_list = [
 		"name": "Dash - cooldown",
 		"description": "Decreese cooldown of dash",
 		"cost": 10,
-		"effect": "dash_cooldown",
+		"effect": "dash_cooldown, right click to use",
 		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
@@ -76,7 +76,7 @@ var upgrades_list = [
 		"name": "Dash - speed",
 		"description": "Increese speed of dash",
 		"cost": 1,
-		"effect": "dash_speed",
+		"effect": "dash_speed, right click to use",
 		"icon": preload("res://assets/sprites/character/placeholder.png")
 	}
 ]
@@ -90,8 +90,7 @@ func set_upgrade_to_button(upgrade_id: int, button_position: int):
 	if button_position < 1 or button_position > 4:
 		print("Error: Invalid button_position: ", button_position, " (should be 1-4)")
 		return
-	
-	# Get the upgrade data
+		
 	var upgrade_data = upgrades_list[upgrade_id]
 	
 	# Get the button node path based on position
@@ -130,7 +129,7 @@ func set_upgrade_to_button(upgrade_id: int, button_position: int):
 	# Store upgrade data in the button for later use
 	button_node.set_meta("upgrade_data", upgrade_data)
 	
-	# Connect button signal if not already connected
+	
 	if not button_node.pressed.is_connected(_on_upgrade_button_pressed):
 		button_node.pressed.connect(_on_upgrade_button_pressed.bind(button_node))
 	
@@ -146,17 +145,17 @@ func randomize_shop():
 		var button_position = i + 1
 		set_upgrade_to_button(upgrade_id, button_position)
 
-# Function to handle button presses
+
 func _on_upgrade_button_pressed(button):
 	var upgrade_data = button.get_meta("upgrade_data")
 	
 	var player_money = get_player_money() 
 	
 	if player_money >= upgrade_data.cost:
-		# Deduct money
+
 		spend_money(upgrade_data.cost)
 		
-		# Apply the upgrade effect
+		
 		apply_upgrade_effect(upgrade_data.effect)
 		
 		print("Purchased: ", upgrade_data.name)
@@ -171,7 +170,7 @@ func apply_upgrade_effect(effect: String):
 	
 	match effect:
 		"speed_boost":
-			# Increase player speed
+			
 			get_player().speed_multiplier += 0.02
 		"sprint":
 			if get_player().can_sprint == true:
@@ -182,27 +181,28 @@ func apply_upgrade_effect(effect: String):
 			get_player().max_health += 25
 			get_player().current_health += 25
 		"damage_boost":
-			# Increase damage
+			
 			get_player().damage_multiplier += 0.3
 		"shield":
-			# Activate shield
+			
 			get_player().activate_shield(5.0)  # 5 seconds
 		"dash_speed":
 			get_player().dash_speed *= 1.2
 			print("Dash speed: " + str(get_player().dash_speed))
+		"skip":
+			print("Shop skipped")
 		_:
 			print("Unknown effect: ", effect)
 
 func get_player_money() -> int:
-	# Replace with your actual money system
+	
 	return numberOfCoins
 
 func spend_money(amount: int):
-	# Replace with your actual money system
 	numberOfCoins -= amount
 
 func get_player():
-	# Replace with your actual player reference
+
 	return get_tree().get_root().get_node("main/player")
 
 

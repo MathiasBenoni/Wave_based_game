@@ -41,7 +41,7 @@ func screen_shake(x):
 
 func _process(delta: float) -> void:
 	delta = delta
-	$camera/CanvasLayer/health.max_value = max_health
+	$camera/CanvasLayer/VBoxContainer/HBoxContainer/health.max_value = max_health
 	update_ui()
 	handle_sprite_direction()
 
@@ -57,8 +57,8 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func update_ui():
-	$camera/CanvasLayer/sprint.value = sprint
-	$camera/CanvasLayer/health.value = current_health
+	$camera/CanvasLayer/VBoxContainer/HBoxContainer2/sprint.value = sprint
+	$camera/CanvasLayer/VBoxContainer/HBoxContainer/health.value = current_health
 
 func handle_sprite_direction():
 	var mouse_position = get_global_mouse_position()

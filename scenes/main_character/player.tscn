@@ -61,43 +61,6 @@ script = ExtResource("6_mj2pr")
 [node name="CanvasLayer" type="CanvasLayer" parent="camera"]
 layer = 0
 
-[node name="sprint" type="TextureProgressBar" parent="camera/CanvasLayer"]
-z_index = -1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -39.0
-offset_top = 38.0
-offset_right = 40.0
-offset_bottom = 48.0
-grow_horizontal = 2
-grow_vertical = 2
-value = 100.0
-fill_mode = 6
-nine_patch_stretch = true
-texture_progress = ExtResource("6_ancg7")
-
-[node name="health" type="TextureProgressBar" parent="camera/CanvasLayer"]
-z_index = -1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -48.0
-offset_top = -101.0
-offset_right = 51.0
-offset_bottom = -74.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_vertical = 8
-value = 100.0
-fill_mode = 6
-nine_patch_stretch = true
-texture_progress = ExtResource("5_4d8ha")
-
 [node name="damage" type="ColorRect" parent="camera/CanvasLayer"]
 visible = false
 anchors_preset = 15
@@ -106,6 +69,40 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 0, 0.160784, 0.403922)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="camera/CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = -105.0
+offset_right = 349.0
+offset_bottom = -13.0
+grow_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="camera/CanvasLayer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="health" type="TextureProgressBar" parent="camera/CanvasLayer/VBoxContainer/HBoxContainer"]
+z_index = -1
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+nine_patch_stretch = true
+texture_progress = ExtResource("5_4d8ha")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="camera/CanvasLayer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="sprint" type="TextureProgressBar" parent="camera/CanvasLayer/VBoxContainer/HBoxContainer2"]
+z_index = -1
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+nine_patch_stretch = true
+texture_progress = ExtResource("6_ancg7")
 
 [node name="hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(-2, -1)

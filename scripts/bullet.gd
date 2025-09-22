@@ -1,9 +1,8 @@
 extends CharacterBody2D
 
 @export var SPEED : int = 300
-
-
 var speed_mult = 1
+var damage := 10
 
 func bullet():
 	pass
