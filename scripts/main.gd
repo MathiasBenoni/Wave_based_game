@@ -194,14 +194,13 @@ func _on_upgrade_button_hover_exit(button):
 	if info_label:
 		# Clear the description when mouse leaves
 		info_label.text = ""
-		print("Cleared info text")
+	
 
 # Helper function to debug scene tree structure
 func print_scene_tree(node: Node, indent: int):
-	var indent_str = ""
+	var _indent_str = ""
 	for i in range(indent):
-		indent_str += "  "
-	print(indent_str + node.name + " (" + node.get_class() + ")")
+		_indent_str += "  "
 	for child in node.get_children():
 		print_scene_tree(child, indent + 1)
 
@@ -400,3 +399,7 @@ func _on_continue_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
+
+func gameover():
+	get_tree().paused = true
+	$player/gameover.visible = true

@@ -179,6 +179,7 @@ func take_damage(damage: float):
 
 func die():
 	print("Player died!")
+	get_tree().get_root().get_node("main").gameover()
 	# Add death logic here
 
 # Upgrade system integration
