@@ -129,11 +129,79 @@ func set_upgrade_to_button(upgrade_id: int, button_position: int):
 	# Store upgrade data in the button for later use
 	button_node.set_meta("upgrade_data", upgrade_data)
 	
-	
+	# Connect the pressed signal if not already connected
 	if not button_node.pressed.is_connected(_on_upgrade_button_pressed):
 		button_node.pressed.connect(_on_upgrade_button_pressed.bind(button_node))
 	
+	# Connect hover signals for showing description
+	if not button_node.mouse_entered.is_connected(_on_upgrade_button_hover_enter):
+		button_node.mouse_entered.connect(_on_upgrade_button_hover_enter.bind(button_node))
+		print("Connected mouse_entered signal for button: ", button_node.name)
+	
+	if not button_node.mouse_exited.is_connected(_on_upgrade_button_hover_exit):
+		button_node.mouse_exited.connect(_on_upgrade_button_hover_exit.bind(button_node))
+		print("Connected mouse_exited signal for button: ", button_node.name)
+	
 	print("Set upgrade '", upgrade_data.name, "' to button position ", button_position)
+
+func _on_upgrade_button_hover_enter(button):
+	print("Mouse entered button: ", button.name, " with text: ", button.text)
+	
+	if not button.has_meta("upgrade_data"):
+		print("Error: Button has no upgrade_data meta!")
+		return
+		
+	var upgrade_data = button.get_meta("upgrade_data")
+	print("Upgrade data: ", upgrade_data.name)
+	
+	# Get the info label - it should be a sibling of the VBoxContainer that contains the buttons
+	var info_label = button.get_parent().get_parent().get_parent().get_node("Info")
+	
+	if info_label:
+		# Display upgrade name and description
+		info_label.text = upgrade_data.name + "\n" + upgrade_data.description
+		print("Set info text to: ", info_label.text)
+	else:
+		print("Error: Could not find info label as sibling!")
+		# Try alternative path
+		var shop_node = button.get_parent()
+		while shop_node != null and shop_node.name != "shop":
+			shop_node = shop_node.get_parent()
+		
+		if shop_node and shop_node.has_node("Info"):
+			info_label = shop_node.get_node("Info")
+			info_label.text = upgrade_data.name + "\n" + upgrade_data.description
+			print("Found info label via shop node navigation")
+		else:
+			print("Could not find Info label anywhere!")
+
+func _on_upgrade_button_hover_exit(button):
+	print("Mouse exited button: ", button.name)
+	
+	# Same logic as enter function
+	var info_label = button.get_parent().get_parent().get_parent().get_node("Info")
+	
+	if not info_label:
+		var shop_node = button.get_parent()
+		while shop_node != null and shop_node.name != "shop":
+			shop_node = shop_node.get_parent()
+		
+		if shop_node and shop_node.has_node("Info"):
+			info_label = shop_node.get_node("Info")
+	
+	if info_label:
+		# Clear the description when mouse leaves
+		info_label.text = ""
+		print("Cleared info text")
+
+# Helper function to debug scene tree structure
+func print_scene_tree(node: Node, indent: int):
+	var indent_str = ""
+	for i in range(indent):
+		indent_str += "  "
+	print(indent_str + node.name + " (" + node.get_class() + ")")
+	for child in node.get_children():
+		print_scene_tree(child, indent + 1)
 
 func randomize_shop():
 	var available_upgrades = range(upgrades_list.size())  # [0, 1, 2, 3, 4, 5]
@@ -312,6 +380,10 @@ func post_wave():
 func shop():
 	randomize_shop()
 	$player/shop.visible = true
+	# Clear info label when shop opens
+	var info_label = $player/shop/info
+	if info_label:
+		info_label.text = ""
 	pass
 
 func _on_continue_pressed() -> void:
