@@ -181,6 +181,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxcontainer" type="VBoxContainer" parent="player/shop/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -223,7 +224,7 @@ text = "Test2"
 [node name="VBoxContainer3" type="VBoxContainer" parent="player/shop/VBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="player/shop/VBoxContainer/VBoxContainer3"]
 layout_mode = 2
@@ -243,7 +244,7 @@ text = "Test3"
 [node name="VBoxContainer4" type="VBoxContainer" parent="player/shop/VBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="player/shop/VBoxContainer/VBoxContainer4"]
 layout_mode = 2

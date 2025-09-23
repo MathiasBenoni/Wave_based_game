@@ -9,6 +9,8 @@ var numberOfWaves = 0
 var startPos = Vector2(450,280)
 var numberOfCoins := 0
 var temp_damage := 0.0
+var button_minimum_size = Vector2(200, 10)
+
 
 @export var damage := 10.0
 
@@ -155,7 +157,7 @@ func _on_upgrade_button_hover_enter(button):
 	print("Upgrade data: ", upgrade_data.name)
 	
 	# Get the info label - it should be a sibling of the VBoxContainer that contains the buttons
-	var info_label = button.get_parent().get_parent().get_parent().get_node("Info")
+	var info_label = $player/shop/Info
 	
 	if info_label:
 		# Display upgrade name and description
@@ -179,7 +181,7 @@ func _on_upgrade_button_hover_exit(button):
 	print("Mouse exited button: ", button.name)
 	
 	# Same logic as enter function
-	var info_label = button.get_parent().get_parent().get_parent().get_node("Info")
+	var info_label = $player/shop/Info
 	
 	if not info_label:
 		var shop_node = button.get_parent()
@@ -255,8 +257,11 @@ func apply_upgrade_effect(effect: String):
 			
 			get_player().activate_shield(5.0)  # 5 seconds
 		"dash_speed":
-			get_player().dash_speed *= 1.2
-			print("Dash speed: " + str(get_player().dash_speed))
+			if get_player().can_dash == false:
+				get_player().can_dash = true
+			else:
+				get_player().dash_speed *= 1.2
+				print("Dash speed: " + str(get_player().dash_speed))
 		"skip":
 			print("Shop skipped")
 		_:
@@ -278,7 +283,10 @@ func get_player():
 
 func _ready() -> void:
 	randomize_shop()
-	$player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1.custom_minimum_size = Vector2(179	,10)
+	$player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1.custom_minimum_size = button_minimum_size
+	$player/shop/VBoxContainer/VBoxContainer2/VBoxContainer/upgrade2.custom_minimum_size = button_minimum_size
+	$player/shop/VBoxContainer/VBoxContainer3/VBoxContainer/upgrade3.custom_minimum_size = button_minimum_size
+	$player/shop/VBoxContainer/VBoxContainer4/VBoxContainer/upgrade4.custom_minimum_size = button_minimum_size
 
 	$player/post_wave.visible = false
 	$player/esc_menu.process_mode = Node.PROCESS_MODE_WHEN_PAUSED 
@@ -381,7 +389,7 @@ func shop():
 	randomize_shop()
 	$player/shop.visible = true
 	# Clear info label when shop opens
-	var info_label = $player/shop/info
+	var info_label = $player/shop/Info
 	if info_label:
 		info_label.text = ""
 	pass
