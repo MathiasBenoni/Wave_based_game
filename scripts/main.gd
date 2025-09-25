@@ -282,6 +282,7 @@ func get_player():
 
 func _ready() -> void:
 	randomize_shop()
+	$player/gameover.visible = false
 	$player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1.custom_minimum_size = button_minimum_size
 	$player/shop/VBoxContainer/VBoxContainer2/VBoxContainer/upgrade2.custom_minimum_size = button_minimum_size
 	$player/shop/VBoxContainer/VBoxContainer3/VBoxContainer/upgrade3.custom_minimum_size = button_minimum_size
@@ -399,7 +400,12 @@ func _on_continue_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
+	print("Quit")
 
 func gameover():
 	get_tree().paused = true
-	$player/gameover.visible = true
+	get_tree().change_scene_to_file("res://scenes/startscreen.tscn")
+
+
+func _on_player_i_died() -> void:
+	gameover()

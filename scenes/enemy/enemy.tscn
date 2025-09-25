@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://vnvvaa0hjx8k"]
+[gd_scene load_steps=7 format=3 uid="uid://vnvvaa0hjx8k"]
 
 [ext_resource type="Texture2D" uid="uid://p8vth31ylv2c" path="res://assets/sprites/enemy/enemy_1.png" id="1_0xc1j"]
 [ext_resource type="Script" uid="uid://d3o0wyavrwsuy" path="res://scripts/enemy.gd" id="1_v2ov6"]
 [ext_resource type="Texture2D" uid="uid://cede7gq3dj76q" path="res://assets/sprites/enemy/enemy_1_damaged.png" id="2_40wdo"]
+[ext_resource type="Texture2D" uid="uid://cli5twyfbuk57" path="res://assets/sprites/character/healthbar_placeholder.png" id="4_tjssy"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_435ot"]
 animations = [{
@@ -35,11 +36,24 @@ metadata/_edit_group_ = true
 position = Vector2(-2.49999, -4.5)
 scale = Vector2(1.71875, 1.71875)
 sprite_frames = SubResource("SpriteFrames_435ot")
+animation = &"damaged"
 autoplay = "default"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.499992, -0.499996)
 shape = SubResource("CircleShape2D_bwjj2")
+
+[node name="health" type="TextureProgressBar" parent="."]
+z_index = -1
+offset_left = -34.5
+offset_top = -37.0
+offset_right = 35.5
+offset_bottom = -27.0
+size_flags_horizontal = 3
+value = 100.0
+nine_patch_stretch = true
+texture_progress = ExtResource("4_tjssy")
+metadata/_edit_use_anchors_ = true
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

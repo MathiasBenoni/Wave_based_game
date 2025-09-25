@@ -9,6 +9,9 @@ var number_of_coins := 0
 var move_speed = 0
 var speed_multiplier := 1.0
 
+
+var have_died = false
+
 # Sprint system variables
 var sprint_drain_rate = 40.0
 var can_sprint = true
@@ -29,6 +32,7 @@ var can_dash = true
 
 func _ready() -> void:
 	move_speed = normal_speed
+	$camera/CanvasLayer/VBoxContainer/HBoxContainer/health.max_value = max_health
 
 func coin():
 	get_tree().get_root().get_node("main").coin()
@@ -40,6 +44,12 @@ func screen_shake(x):
 	$camera.apply_shake(x)
 
 func _process(delta: float) -> void:
+	
+	
+	if current_health <= 0 and have_died == false:
+		die()
+		have_died = true
+	
 	delta = delta
 	$camera/CanvasLayer/VBoxContainer/HBoxContainer/health.max_value = max_health
 	update_ui()
@@ -156,31 +166,39 @@ func handle_sprint(delta: float):
 
 
 func take_damage(damage: float):
+	
+	
 	if is_dashing == true:
 		$camera.apply_shake(1.5)
 		$hitbox.disabled = true
 		current_health -= damage * 0.5
-		current_health = max(current_health, 0)
+		#current_health = max(current_health, 0)
+		print(current_health)
 		await get_tree().create_timer(0.5).timeout
 		$hitbox.disabled = false
+		
 	else:
 		$camera.apply_shake(1)
 		$camera/CanvasLayer/damage.visible = true
 		$hitbox.disabled = true
 		current_health -= damage
-		current_health = max(current_health, 0)
+		#current_health = max(current_health, 0)
+		print(current_health)
 		await get_tree().create_timer(0.2).timeout
 		$camera/CanvasLayer/damage.visible = false
 		await get_tree().create_timer(0.8).timeout
 		$hitbox.disabled = false
+		
 	
-	if current_health <= 0:
+	print($camera/CanvasLayer/VBoxContainer/HBoxContainer/health.value)
+	if current_health <= 0 and have_died == false:
 		die()
+		have_died = true
 
 func die():
 	print("Player died!")
+	#get_tree().change_scene_to_file("res://scenes/startscreen.tscn")
 	get_tree().get_root().get_node("main").gameover()
-	# Add death logic here
 
 # Upgrade system integration
 func apply_speed_boost(multiplier: float):

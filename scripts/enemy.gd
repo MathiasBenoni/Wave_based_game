@@ -57,10 +57,9 @@ func take_damage(body):
 	
 	var damage = body.damage
 	health -= damage
+	$health.value = health
 	
 	body.queue_free()
-	
-	
 	
 	if health <= 0:
 		die()
