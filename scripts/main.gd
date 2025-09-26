@@ -403,8 +403,11 @@ func _on_quit_pressed() -> void:
 	print("Quit")
 
 func gameover():
+	
 	get_tree().paused = true
+	await get_tree().create_timer(0.5).timeout
 	get_tree().change_scene_to_file("res://scenes/startscreen.tscn")
+	#get_tree().change_scene_to_file("res://scenes/startscreen.tscn")
 
 
 func _on_player_i_died() -> void:
