@@ -12,13 +12,12 @@ config_version=5
 
 config/name="Wave_based_game"
 run/main_scene="uid://diuwsm1cap3pl"
-config/features=PackedStringArray("4.4")
+config/features=PackedStringArray("4.5")
 boot_splash/image="uid://dkq23wtyels6o"
 config/icon="uid://dkq23wtyels6o"
 
 [display]
 
-window/size/mode=2
 mouse_cursor/custom_image="uid://c27recoepypp0"
 
 [input]

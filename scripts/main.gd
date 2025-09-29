@@ -388,7 +388,7 @@ func post_wave():
 func shop():
 	randomize_shop()
 	$player/shop.visible = true
-	# Clear info label when shop opens
+	# Clear info labeldwawswd when shop opens
 	var info_label = $player/shop/Info
 	if info_label:
 		info_label.text = ""
@@ -398,17 +398,17 @@ func _on_continue_pressed() -> void:
 	pause()
 
 
-func _on_quit_pressed() -> void:
-	get_tree().quit()
-	print("Quit")
-
 func gameover():
 	
 	get_tree().paused = true
-	await get_tree().create_timer(0.5).timeout
-	get_tree().change_scene_to_file("res://scenes/startscreen.tscn")
+	$player/gameover.visible = true
+	
 	#get_tree().change_scene_to_file("res://scenes/startscreen.tscn")
 
 
 func _on_player_i_died() -> void:
 	gameover()
+
+
+func _on_quit_pressed() -> void:
+	print("Quit")

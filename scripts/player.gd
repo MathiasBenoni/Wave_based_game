@@ -9,7 +9,6 @@ var number_of_coins := 0
 var move_speed = 0
 var speed_multiplier := 1.0
 
-
 var have_died = false
 
 # Sprint system variables
@@ -44,13 +43,10 @@ func screen_shake(x):
 	$camera.apply_shake(x)
 
 func _process(delta: float) -> void:
-	
-	
 	if current_health <= 0 and have_died == false:
 		die()
 		have_died = true
 	
-	delta = delta
 	$camera/CanvasLayer/VBoxContainer/HBoxContainer/health.max_value = max_health
 	update_ui()
 	handle_sprite_direction()
@@ -63,7 +59,8 @@ func _physics_process(delta: float) -> void:
 		handle_movement(delta)
 		handle_sprint(delta)
 	
-	# Use move_and_slide() instead of move_and_collide() for better collision handling
+	# move_and_slide() handles collision detection and response automatically
+	# It uses the velocity property and applies it with delta time
 	move_and_slide()
 
 func update_ui():
@@ -80,8 +77,7 @@ func handle_sprite_direction():
 		$sprite.flip_h = false
 
 func handle_dash_input():
-	# Check for dash input (you can change this to any key you prefer)
-	if Input.is_action_just_pressed("right_click") and can_dash:  # Space bar by default
+	if Input.is_action_just_pressed("right_click") and can_dash:
 		start_dash()
 
 func start_dash():
@@ -94,6 +90,7 @@ func start_dash():
 		is_dashing = true
 		dash_timer = dash_duration
 		dash_cooldown_timer = dash_cooldown
+		can_dash = false  # Prevent dash spamming
 		
 		print("Dashing towards mouse!")
 
@@ -101,13 +98,14 @@ func handle_dash(delta: float):
 	# Update dash cooldown
 	if dash_cooldown_timer > 0:
 		dash_cooldown_timer -= delta
+	else:
+		can_dash = true  # Re-enable dash when cooldown is over
 	
 	if is_dashing:
 		if $hitbox.disabled == true:
 			$hitbox.disabled = false
-			
-			
-		# Apply dash velocity
+		
+		# Set velocity directly for dash - move_and_slide() will handle the movement
 		velocity = dash_direction * dash_speed
 		
 		# Update dash timer
@@ -124,30 +122,28 @@ func handle_movement(delta: float):
 	input_vector.x = Input.get_axis("move_left", "move_right")
 	input_vector.y = Input.get_axis("move_up", "move_down")
 	
-	
-	
 	# Handle animations
 	if input_vector != Vector2.ZERO:
 		$sprite.play("walk")
 		
-		# Smooth acceleration towards target velocity
+		# Calculate target velocity with proper normalization
 		var target_velocity = input_vector.normalized() * move_speed * speed_multiplier
+		
+		# Smooth acceleration towards target velocity using move_toward
 		velocity = velocity.move_toward(target_velocity, acceleration * delta)
 	else:
 		$sprite.play("default")
 		
-		# Apply friction when not moving
+		# Apply friction when not moving - gradually reduce velocity to zero
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
-		
+
 func handle_sprint(delta: float):
 	var is_moving = velocity.length() > 0
 	var is_trying_to_sprint = Input.is_action_pressed("sprint") and is_moving
 	var can_actually_sprint = can_sprint and sprint > 0
 	
-	# Update sprint regen timer
-	
 	if is_trying_to_sprint and can_actually_sprint:
-		# Sprinting
+		# Sprinting - drain sprint energy
 		sprint -= sprint_drain_rate * delta
 		sprint = max(sprint, 0)
 		move_speed = boost_speed
@@ -159,36 +155,28 @@ func handle_sprint(delta: float):
 		# Not sprinting
 		move_speed = normal_speed
 		
-			
 		# Re-enable sprint when it reaches a threshold
 		if sprint >= 20:
 			can_sprint = true
 
-
 func take_damage(damage: float):
-	
-	
 	if is_dashing == true:
 		$camera.apply_shake(1.5)
 		$hitbox.disabled = true
 		current_health -= damage * 0.5
-		#current_health = max(current_health, 0)
 		print(current_health)
 		await get_tree().create_timer(0.5).timeout
 		$hitbox.disabled = false
-		
 	else:
 		$camera.apply_shake(1)
 		$camera/CanvasLayer/damage.visible = true
 		$hitbox.disabled = true
 		current_health -= damage
-		#current_health = max(current_health, 0)
 		print(current_health)
 		await get_tree().create_timer(0.2).timeout
 		$camera/CanvasLayer/damage.visible = false
 		await get_tree().create_timer(0.8).timeout
 		$hitbox.disabled = false
-		
 	
 	print($camera/CanvasLayer/VBoxContainer/HBoxContainer/health.value)
 	if current_health <= 0 and have_died == false:
@@ -197,8 +185,28 @@ func take_damage(damage: float):
 
 func die():
 	print("Player died!")
-	#get_tree().change_scene_to_file("res://scenes/startscreen.tscn")
 	get_tree().get_root().get_node("main").gameover()
+
+# Alternative movement function using move_and_collide() if needed
+func handle_movement_with_collide(delta: float):
+	var input_vector = Vector2.ZERO
+	input_vector.x = Input.get_axis("move_left", "move_right")
+	input_vector.y = Input.get_axis("move_up", "move_down")
+	
+	if input_vector != Vector2.ZERO:
+		$sprite.play("walk")
+		var target_velocity = input_vector.normalized() * move_speed * speed_multiplier
+		velocity = velocity.move_toward(target_velocity, acceleration * delta)
+	else:
+		$sprite.play("default")
+		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+	
+	# Using move_and_collide() - returns collision info if collision occurs
+	var collision = move_and_collide(velocity * delta)
+	if collision:
+		# Handle collision manually if needed
+		print("Collided with: ", collision.get_collider().name)
+		# You can add custom collision response here
 
 # Upgrade system integration
 func apply_speed_boost(multiplier: float):
@@ -207,15 +215,14 @@ func apply_speed_boost(multiplier: float):
 
 func increase_max_health(amount: int):
 	max_health += amount
-	current_health += amount  # Also heal when gaining max health
+	current_health += amount
 	print("Max health increased to: ", max_health)
 
-# Dash upgrade functions
 func upgrade_dash_speed(amount: float):
 	dash_speed += amount
 	print("Dash speed increased to: ", dash_speed)
 
 func upgrade_dash_cooldown(reduction: float):
 	dash_cooldown -= reduction
-	dash_cooldown = max(dash_cooldown, 0.5)  # Minimum cooldown
+	dash_cooldown = max(dash_cooldown, 0.1)
 	print("Dash cooldown reduced to: ", dash_cooldown)
