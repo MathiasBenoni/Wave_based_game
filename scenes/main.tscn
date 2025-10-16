@@ -318,14 +318,17 @@ grow_vertical = 2
 color = Color(0.380392, 0.713726, 0.552941, 0.521569)
 
 [node name="gameover" type="CanvasLayer" parent="player"]
+process_mode = 2
 layer = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="player/gameover"]
+z_index = -1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="Label" type="Label" parent="player/gameover/VBoxContainer"]
 layout_mode = 2
@@ -334,7 +337,7 @@ size_flags_vertical = 6
 theme_override_font_sizes/font_size = 200
 text = "Game Over"
 
-[node name="restart" type="Button" parent="player/gameover/VBoxContainer"]
+[node name="game_over_restart" type="Button" parent="player/gameover/VBoxContainer"]
 z_index = 1
 layout_mode = 2
 size_flags_horizontal = 4
@@ -342,7 +345,7 @@ theme_override_font_sizes/font_size = 100
 button_mask = 3
 text = "Restart"
 
-[node name="quit" type="Button" parent="player/gameover/VBoxContainer"]
+[node name="game_over_quit" type="Button" parent="player/gameover/VBoxContainer"]
 z_index = 1
 layout_mode = 2
 size_flags_horizontal = 4
@@ -352,12 +355,15 @@ button_mask = 3
 text = "Quit"
 
 [node name="ColorRect" type="ColorRect" parent="player/gameover"]
+visible = false
 z_index = -1
+z_as_relative = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(1, 0, 0.160784, 0.403922)
 
 [node name="spawns" type="Node" parent="."]
@@ -374,4 +380,5 @@ position = Vector2(885, 11)
 [connection signal="pressed" from="player/shop/VBoxContainer/VBoxContainer2/VBoxContainer/upgrade2" to="." method="_on_upgrade_2_pressed"]
 [connection signal="pressed" from="player/shop/VBoxContainer/VBoxContainer3/VBoxContainer/upgrade3" to="." method="_on_upgrade_3_pressed"]
 [connection signal="pressed" from="player/shop/VBoxContainer/VBoxContainer4/VBoxContainer/upgrade4" to="." method="_on_upgrade_4_pressed"]
-[connection signal="pressed" from="player/gameover/VBoxContainer/quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="player/gameover/VBoxContainer/game_over_restart" to="." method="_on_game_over_restart_pressed"]
+[connection signal="pressed" from="player/gameover/VBoxContainer/game_over_quit" to="." method="_on_game_over_quit_pressed"]
