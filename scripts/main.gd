@@ -67,10 +67,10 @@ var upgrades_list = [
 	},
 	{
 		"id": 7,
-		"name": "Dash - Enable",
+		"name": "Dash",
 		"description": "Enables dash, right click to use",
-		"cost": 15,
-		"effect": "dash_cooldown, right click to use",
+		"cost": 1,
+		"effect": "Dash",
 		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
@@ -205,17 +205,28 @@ func print_scene_tree(node: Node, indent: int):
 		print_scene_tree(child, indent + 1)
 
 func randomize_shop():
-	var available_upgrades = range(upgrades_list.size())  # [0, 1, 2, 3, 4, 5]
+	var available_upgrades = range(upgrades_list.size())  # [0, 1, 2, 3, 4, 5, ...]
 	available_upgrades.shuffle()
-
-	for i in range(4):
-		var upgrade_id = available_upgrades[i]
-		var button_position = i + 1
-		set_upgrade_to_button(upgrade_id, button_position)
-		if set_upgrade_to_button(upgrade_id, button_position) == "new_id":
-			print("invalid id")
-			randomize_shop()
+	
+	var selected_upgrades = []
+	var upgrade_index = 0
+	
+	# Keep trying until we have 4 valid unique upgrades
+	while selected_upgrades.size() < 4 and upgrade_index < available_upgrades.size():
+		var upgrade_id = available_upgrades[upgrade_index]
+		var button_position = selected_upgrades.size() + 1
 		
+		var result = set_upgrade_to_button(upgrade_id, button_position)
+		
+		if result != "new_id":
+			# This upgrade is valid, add it to our selected list
+			selected_upgrades.append(upgrade_id)
+		
+		upgrade_index += 1
+	
+	# If we couldn't find 4 valid upgrades, fill remaining slots with valid ones
+	if selected_upgrades.size() < 4:
+		print("Warning: Could not find 4 unique valid upgrades")		
 
 func _on_upgrade_button_pressed(button):
 	var upgrade_data = button.get_meta("upgrade_data")
@@ -241,7 +252,7 @@ func apply_upgrade_effect(effect: String):
 	
 	match effect:
 		"speed_boost":
-			
+		
 			get_player().speed_multiplier += 0.02
 		"sprint":
 			if get_player().can_sprint == true:
@@ -251,18 +262,22 @@ func apply_upgrade_effect(effect: String):
 		"extra_health":
 			get_player().max_health += 25
 			get_player().current_health += 25
+			
 		"damage_boost":
 			
 			get_player().damage_multiplier += 0.3
 		"shield":
 			
 			get_player().activate_shield(5.0)  # 5 seconds
+			
+		"Dash":
+			get_player().can_dash = true
+			print("Dash = true")
+			
 		"dash_speed":
-			if get_player().can_dash == false:
-				get_player().can_dash = true
-			else:
-				get_player().dash_speed *= 1.2
-				print("Dash speed: " + str(get_player().dash_speed))
+			get_player().dash_speed *= 1.2
+			print("Dash speed: " + str(get_player().dash_speed))
+			
 		"skip":
 			print("Shop skipped")
 		_:
@@ -296,7 +311,6 @@ func _ready() -> void:
 	$player/esc_menu.hide()
 	$player/shop.hide()
 	nextWave()
-	
 	
 
 func nextWave():

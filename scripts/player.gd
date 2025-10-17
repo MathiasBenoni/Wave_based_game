@@ -28,6 +28,7 @@ var dash_cooldown_timer = 0.0
 var is_dashing = false
 var dash_direction = Vector2.ZERO
 var can_dash = false
+var damage_multiplier := 1.0
 
 func _ready() -> void:
 	move_speed = normal_speed
@@ -43,6 +44,7 @@ func screen_shake(x):
 	$camera.apply_shake(x)
 
 func _process(delta: float) -> void:
+	delta = delta
 	if current_health <= 0 and have_died == false:
 		die()
 		have_died = true
@@ -98,8 +100,8 @@ func handle_dash(delta: float):
 	# Update dash cooldown
 	if dash_cooldown_timer > 0:
 		dash_cooldown_timer -= delta
-	else:
-		can_dash = true  # Re-enable dash when cooldown is over
+		
+		can_dash = true
 	
 	if is_dashing:
 		if $hitbox.disabled == true:
