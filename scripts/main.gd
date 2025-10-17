@@ -345,7 +345,10 @@ func spawnEnemies():
 			enemy.position = get_tree().get_root().get_node("main/spawns/spawn1").position
 		else:
 			enemy.position = get_tree().get_root().get_node("main/spawns/spawn2").position
+		
+		print("Spawn position: ", enemy.position)
 		$enemies.add_child(enemy)
+		print("Enemy actual position after adding: ", enemy.global_position)
 
 func _input(event: InputEvent) -> void:
 	event = event
@@ -359,6 +362,7 @@ func _input(event: InputEvent) -> void:
 		$player/shop.hide()
 
 func _process(delta: float) -> void:
+	
 	delta = delta
 	if $enemies.get_child_count() == 0:
 		post_wave()
