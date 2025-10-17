@@ -45,9 +45,9 @@ agent_radius = 0.0
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jyhfs"]
 texture = ExtResource("5_u0103")
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4.896653, -8, 4.599888, -8, 8, -4.1547375, 8, 4.1547356, 5.1934204, 8, -4.7977314, 8, -8, 4.9461136, -8, -4.352582)
 1:0/0 = 0
-1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4.896653, -8, 4.599888, -8, 8, -4.1547375, 8, 4.1547356, 5.1934204, 8, -4.7977314, 8, -8, 4.9461136, -8, -4.352582)
 4:2/0 = 0
 5:2/0 = 0
 5:3/0 = 0
@@ -430,7 +430,6 @@ button_mask = 3
 text = "Quit"
 
 [node name="ColorRect" type="ColorRect" parent="player/gameover"]
-visible = false
 z_index = -1
 z_as_relative = false
 anchors_preset = 15
