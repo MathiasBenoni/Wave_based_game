@@ -27,7 +27,7 @@ var dash_timer = 0.0
 var dash_cooldown_timer = 0.0
 var is_dashing = false
 var dash_direction = Vector2.ZERO
-var can_dash = true
+var can_dash = false
 
 func _ready() -> void:
 	move_speed = normal_speed
@@ -77,7 +77,7 @@ func handle_sprite_direction():
 		$sprite.flip_h = false
 
 func handle_dash_input():
-	if Input.is_action_just_pressed("right_click") and can_dash:
+	if Input.is_action_just_pressed("right_click") and can_dash == true:
 		start_dash()
 
 func start_dash():

@@ -95,10 +95,19 @@ func set_upgrade_to_button(upgrade_id: int, button_position: int):
 	# Validate inputs
 	if upgrade_id >= upgrades_list.size() or upgrade_id < 0:
 		print("Error: Invalid upgrade_id: ", upgrade_id)
-		return
+		return "new_id"
+	elif upgrade_id == 7:
+		return "new_id"
+	elif upgrade_id == 8 or upgrade_id == 9:
+		if $player.can_dash == false:
+			return "new_id"
+	if upgrade_id == 7 and $player.can_dash == true:
+		randomize_shop()
+	
 	if button_position < 1 or button_position > 4:
 		print("Error: Invalid button_position: ", button_position, " (should be 1-4)")
-		return
+		return "new_position"
+	
 		
 	var upgrade_data = upgrades_list[upgrade_id]
 	
@@ -198,13 +207,15 @@ func print_scene_tree(node: Node, indent: int):
 func randomize_shop():
 	var available_upgrades = range(upgrades_list.size())  # [0, 1, 2, 3, 4, 5]
 	available_upgrades.shuffle()
-	
-	# Assign first 4 random upgrades to the 4 buttons
+
 	for i in range(4):
 		var upgrade_id = available_upgrades[i]
 		var button_position = i + 1
 		set_upgrade_to_button(upgrade_id, button_position)
-
+		if set_upgrade_to_button(upgrade_id, button_position) == "new_id":
+			print("invalid id")
+			randomize_shop()
+		
 
 func _on_upgrade_button_pressed(button):
 	var upgrade_data = button.get_meta("upgrade_data")
