@@ -67,6 +67,14 @@ var upgrades_list = [
 	},
 	{
 		"id": 7,
+		"name": "Dash - Enable",
+		"description": "Enables dash, right click to use",
+		"cost": 15,
+		"effect": "dash_cooldown, right click to use",
+		"icon": preload("res://assets/sprites/gun/placeholder.png")
+	},
+	{
+		"id": 8,
 		"name": "Dash - cooldown",
 		"description": "Decreese cooldown of dash",
 		"cost": 10,
@@ -74,7 +82,7 @@ var upgrades_list = [
 		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
 	{
-		"id": 8,
+		"id": 9,
 		"name": "Dash - speed",
 		"description": "Increese speed of dash",
 		"cost": 1,
@@ -88,7 +96,6 @@ func set_upgrade_to_button(upgrade_id: int, button_position: int):
 	if upgrade_id >= upgrades_list.size() or upgrade_id < 0:
 		print("Error: Invalid upgrade_id: ", upgrade_id)
 		return
-	
 	if button_position < 1 or button_position > 4:
 		print("Error: Invalid button_position: ", button_position, " (should be 1-4)")
 		return
