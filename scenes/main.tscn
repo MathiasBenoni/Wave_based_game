@@ -450,9 +450,5 @@ position = Vector2(885, 11)
 
 [connection signal="pressed" from="player/esc_menu/VBoxContainer/HBoxContainer2/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="player/esc_menu/VBoxContainer/HBoxContainer4/quit" to="." method="_on_quit_pressed"]
-[connection signal="pressed" from="player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1" to="." method="_on_upgrade_1_pressed"]
-[connection signal="pressed" from="player/shop/VBoxContainer/VBoxContainer2/VBoxContainer/upgrade2" to="." method="_on_upgrade_2_pressed"]
-[connection signal="pressed" from="player/shop/VBoxContainer/VBoxContainer3/VBoxContainer/upgrade3" to="." method="_on_upgrade_3_pressed"]
-[connection signal="pressed" from="player/shop/VBoxContainer/VBoxContainer4/VBoxContainer/upgrade4" to="." method="_on_upgrade_4_pressed"]
 [connection signal="pressed" from="player/gameover/VBoxContainer/game_over_restart" to="." method="_on_game_over_restart_pressed"]
 [connection signal="pressed" from="player/gameover/VBoxContainer/game_over_quit" to="." method="_on_game_over_quit_pressed"]

@@ -45,7 +45,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Start" type="Button" parent="VBoxContainer/VBoxContainer"]
+[node name="start" type="Button" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 100
@@ -70,6 +70,6 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 100
 text = "Quit"
 
-[connection signal="pressed" from="VBoxContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer2/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="VBoxContainer/VBoxContainer3/Quit" to="." method="_on_quit_pressed"]

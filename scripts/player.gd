@@ -11,6 +11,10 @@ var speed_multiplier := 1.0
 
 var have_died = false
 
+# Invincibility system
+var is_invincible = false
+var invincibility_duration = 0.8
+
 # Sprint system variables
 var sprint_drain_rate = 40.0
 var can_sprint = true
@@ -29,6 +33,9 @@ var is_dashing = false
 var dash_direction = Vector2.ZERO
 var can_dash = false
 var damage_multiplier := 1.0
+
+var temp_enemy_damage_mult
+
 
 func _ready() -> void:
 	move_speed = normal_speed
@@ -53,6 +60,11 @@ func _process(delta: float) -> void:
 	update_ui()
 	handle_sprite_direction()
 
+	#if is_invincible == true:
+		#$damagebox.disabled = true
+	#else:
+		#$damagebox.disabled = false
+
 func _physics_process(delta: float) -> void:
 	handle_dash_input()
 	handle_dash(delta)
@@ -61,8 +73,6 @@ func _physics_process(delta: float) -> void:
 		handle_movement(delta)
 		handle_sprint(delta)
 	
-	# move_and_slide() handles collision detection and response automatically
-	# It uses the velocity property and applies it with delta time
 	move_and_slide()
 
 func update_ui():
@@ -84,59 +94,40 @@ func handle_dash_input():
 
 func start_dash():
 	if dash_cooldown_timer <= 0:
-		# Calculate direction towards mouse
 		var mouse_pos = get_global_mouse_position()
 		dash_direction = (mouse_pos - global_position).normalized()
 		
-		# Start dash
 		is_dashing = true
 		dash_timer = dash_duration
 		dash_cooldown_timer = dash_cooldown
-		can_dash = false  # Prevent dash spamming
+		can_dash = false
 		
 		print("Dashing towards mouse!")
 
 func handle_dash(delta: float):
-	# Update dash cooldown
 	if dash_cooldown_timer > 0:
 		dash_cooldown_timer -= delta
-		
 		can_dash = true
 	
 	if is_dashing:
-		if $hitbox.disabled == true:
-			$hitbox.disabled = false
-		
-		# Set velocity directly for dash - move_and_slide() will handle the movement
 		velocity = dash_direction * dash_speed
-		
-		# Update dash timer
 		dash_timer -= delta
 		
-		# End dash when timer expires
 		if dash_timer <= 0:
 			is_dashing = false
 			print("Dash ended")
 
 func handle_movement(delta: float):
-	# Get input vector
 	var input_vector = Vector2.ZERO
 	input_vector.x = Input.get_axis("move_left", "move_right")
 	input_vector.y = Input.get_axis("move_up", "move_down")
 	
-	# Handle animations
 	if input_vector != Vector2.ZERO:
 		$sprite.play("walk")
-		
-		# Calculate target velocity with proper normalization
 		var target_velocity = input_vector.normalized() * move_speed * speed_multiplier
-		
-		# Smooth acceleration towards target velocity using move_toward
 		velocity = velocity.move_toward(target_velocity, acceleration * delta)
 	else:
 		$sprite.play("default")
-		
-		# Apply friction when not moving - gradually reduce velocity to zero
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 
 func handle_sprint(delta: float):
@@ -145,51 +136,64 @@ func handle_sprint(delta: float):
 	var can_actually_sprint = can_sprint and sprint > 0
 	
 	if is_trying_to_sprint and can_actually_sprint:
-		# Sprinting - drain sprint energy
 		sprint -= sprint_drain_rate * delta
 		sprint = max(sprint, 0)
 		move_speed = boost_speed
 		
-		# Disable sprint when empty
 		if sprint <= 0:
 			can_sprint = false
 	else:
-		# Not sprinting
 		move_speed = normal_speed
 		
-		# Re-enable sprint when it reaches a threshold
 		if sprint >= 20:
 			can_sprint = true
 
 func take_damage(damage: float):
-	if is_dashing == true:
+	# Check invincibility - return early without taking damage
+	if is_invincible:
+		return
+	
+	var actual_damage = damage
+	
+	if is_dashing:
 		$camera.apply_shake(1.5)
-		$hitbox.disabled = true
-		current_health -= damage * 0.5
-		print(current_health)
-		await get_tree().create_timer(0.5).timeout
-		$hitbox.disabled = false
+		actual_damage = damage * 0.5
 	else:
 		$camera.apply_shake(1)
-		$camera/CanvasLayer/damage.visible = true
-		$hitbox.disabled = true
-		current_health -= damage
-		print(current_health)
-		await get_tree().create_timer(0.2).timeout
-		$camera/CanvasLayer/damage.visible = false
-		await get_tree().create_timer(0.8).timeout
-		$hitbox.disabled = false
 	
-	print($camera/CanvasLayer/VBoxContainer/HBoxContainer/health.value)
+		current_health -= actual_damage
+	
+	print("Took damage: ", actual_damage, " | Current health: ", current_health)
+	
+	# Start invincibility frames WITHOUT disabling hitbox
+	start_invincibility()
+	
+	# Show damage overlay
+	$camera/CanvasLayer/damage.visible = true
+	await get_tree().create_timer(0.2).timeout
+	$camera/CanvasLayer/damage.visible = false
+	
 	if current_health <= 0 and have_died == false:
 		die()
 		have_died = true
+
+func start_invincibility():
+	is_invincible = true
+	
+	# Visual feedback - flash the sprite
+	var flash_count = 6
+	for i in range(flash_count):
+		$sprite.modulate.a = 0.3
+		await get_tree().create_timer(invincibility_duration / (flash_count * 2)).timeout
+		$sprite.modulate.a = 1.0
+		await get_tree().create_timer(invincibility_duration / (flash_count * 2)).timeout
+	
+	is_invincible = false
 
 func die():
 	print("Player died!")
 	get_tree().get_root().get_node("main").gameover()
 
-# Alternative movement function using move_and_collide() if needed
 func handle_movement_with_collide(delta: float):
 	var input_vector = Vector2.ZERO
 	input_vector.x = Input.get_axis("move_left", "move_right")
@@ -203,14 +207,10 @@ func handle_movement_with_collide(delta: float):
 		$sprite.play("default")
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 	
-	# Using move_and_collide() - returns collision info if collision occurs
 	var collision = move_and_collide(velocity * delta)
 	if collision:
-		# Handle collision manually if needed
 		print("Collided with: ", collision.get_collider().name)
-		# You can add custom collision response here
 
-# Upgrade system integration
 func apply_speed_boost(multiplier: float):
 	speed_multiplier += multiplier
 	print("Speed boost applied! New multiplier: ", speed_multiplier)

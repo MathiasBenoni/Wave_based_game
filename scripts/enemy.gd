@@ -43,11 +43,9 @@ func update_target_position():
 	
 	navigation_agent.target_position = base
 	
-	# Debug: Check if path is valid
-	if not navigation_agent.is_target_reachable():
-		print("WARNING: Target not reachable from ", global_position, " to ", base)
 
 func _physics_process(delta: float) -> void:
+	delta = delta
 	# Update target every frame for dynamic following
 	update_target_position()
 	
@@ -67,15 +65,16 @@ func _physics_process(delta: float) -> void:
 	check_player_collision()
 
 func check_player_collision():
-	var area = $Area2D if has_node("Area2D") else null
-	if not area:
-		return
-		
+	var area = $Area2D
+
 	for overlapped_body in area.get_overlapping_bodies():
 		if overlapped_body.name == "player":
+			if overlapped_body.is_invincible == true:
+				return
 			if overlapped_body.is_dashing == true:
 				die()
 			get_tree().get_root().get_node("main").minus_life()
+			
 
 func die():
 	var coin = coin_scene.instantiate()

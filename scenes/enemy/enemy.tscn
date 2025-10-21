@@ -28,7 +28,7 @@ animations = [{
 radius = 25.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tjssy"]
-radius = 27.6134
+radius = 32.499996
 
 [node name="enemy" type="CharacterBody2D"]
 scale = Vector2(0.4, 0.4)
@@ -40,7 +40,6 @@ metadata/_edit_group_ = true
 position = Vector2(-2.49999, -4.5)
 scale = Vector2(1.71875, 1.71875)
 sprite_frames = SubResource("SpriteFrames_435ot")
-animation = &"damaged"
 autoplay = "default"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

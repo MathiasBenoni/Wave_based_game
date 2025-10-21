@@ -336,19 +336,16 @@ func nextWave():
 	spawnEnemies()
 
 
-
 func spawnEnemies():
 	for n in number_of_enemies * round(numberOfWaves * 0.5):
 		var enemy = enemy_scene.instantiate()
+		$enemies.add_child(enemy)
+		
 		spawn = randi_range(0, 2)
 		if spawn == 1:
-			enemy.position = get_tree().get_root().get_node("main/spawns/spawn1").position
+			enemy.global_position = $spawns/spawn1.global_position
 		else:
-			enemy.position = get_tree().get_root().get_node("main/spawns/spawn2").position
-		
-		print("Spawn position: ", enemy.position)
-		$enemies.add_child(enemy)
-		print("Enemy actual position after adding: ", enemy.global_position)
+			enemy.global_position = $spawns/spawn2.global_position
 
 func _input(event: InputEvent) -> void:
 	event = event

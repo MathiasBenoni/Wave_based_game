@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://0kl88blhnul3"]
+[gd_scene load_steps=12 format=3 uid="uid://0kl88blhnul3"]
 
 [ext_resource type="Script" uid="uid://hog87forpqu0" path="res://scripts/player.gd" id="1_lmbwh"]
 [ext_resource type="Texture2D" uid="uid://bnku2bhw0mk6b" path="res://assets/sprites/character/idle.png" id="2_qpbvr"]
@@ -35,16 +35,15 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_uin8l"]
-radius = 12.51
+radius = 8.062258
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mj2pr"]
+radius = 12.0
 
 [node name="player" type="CharacterBody2D"]
 scale = Vector2(0.5, 0.5)
-collision_layer = 255
-collision_mask = 255
 motion_mode = 1
 script = ExtResource("1_lmbwh")
-max_health = 90
-dash_speed = 600.0
 
 [node name="gun" parent="." instance=ExtResource("3_gi2fm")]
 position = Vector2(-1, -3.5)
@@ -108,5 +107,9 @@ texture_progress = ExtResource("6_ancg7")
 [node name="hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(-2, -1)
 shape = SubResource("CircleShape2D_uin8l")
+
+[node name="damagebox" type="CollisionShape2D" parent="."]
+position = Vector2(-2, -2)
+shape = SubResource("CircleShape2D_mj2pr")
 
 [connection signal="body_entered" from="gun" to="." method="_on_gun_body_entered"]
