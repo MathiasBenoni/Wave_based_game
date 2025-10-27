@@ -62,9 +62,9 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 	
 	# Check for player collision
-	check_player_collision()
+	check_player_presense()
 
-func check_player_collision():
+func check_player_presense():
 	var area = $Area2D
 
 	for overlapped_body in area.get_overlapping_bodies():
@@ -73,8 +73,19 @@ func check_player_collision():
 				return
 			if overlapped_body.is_dashing == true:
 				die()
-			get_tree().get_root().get_node("main").minus_life()
+				
+			attack()
 			
+			
+
+func attack():
+	
+	
+	
+	player_minuslife()
+
+func player_minuslife():
+	get_tree().get_root().get_node("main").minus_life()
 
 func die():
 	var coin = coin_scene.instantiate()
