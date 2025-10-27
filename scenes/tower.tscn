@@ -19,6 +19,7 @@ position = Vector2(0, 15.5)
 shape = SubResource("RectangleShape2D_2x682")
 
 [node name="cooldown" type="Timer" parent="."]
+wait_time = 0.001
 one_shot = true
 
 [connection signal="timeout" from="cooldown" to="." method="_on_cooldown_timeout"]

@@ -12,7 +12,7 @@ var temp_damage := 0.0
 var button_minimum_size = Vector2(200, 10)
 
 
-var towers := 5
+var towers := 0
 
 @export var damage := 10.0
 
@@ -25,7 +25,7 @@ var upgrades_list = [
 		"description": "Increases movement speed by 20%",
 		"cost": 0,
 		"effect": "speed_boost",
-		"icon": preload("res://assets/sprites/gun/placeholder.png")
+		"icon": preload("res://assets/sprites/upgrades/move_upgrade.png")
 	},
 	{
 		"id": 1,
@@ -41,7 +41,7 @@ var upgrades_list = [
 		"description": "Adds 25 health points",
 		"cost": 2,
 		"effect": "extra_health",
-		"icon": preload("res://assets/sprites/gun/placeholder.png")
+		"icon": preload("res://assets/sprites/upgrades/card_health_upgrade.png")
 	},
 	{
 		"id": 4,
@@ -49,23 +49,23 @@ var upgrades_list = [
 		"description": "Increases damage by 30%",
 		"cost": 1,
 		"effect": "damage_boost",
-		"icon": preload("res://assets/sprites/gun/placeholder.png")
+		"icon": preload("res://assets/sprites/upgrades/damage_boost.png")
 	},
-	#{
-		#"id": 5,
-		#"name": "Shield",
-		#"description": "Shield for + 2 hitpoints for the base",
-		#"cost": 6,
-		#"effect": "shield",
-		#"icon": preload("res://assets/sprites/gun/placeholder.png")
-	#},
+	{
+		"id": 5,
+		"name": "Firerate",
+		"description": "Increse the firerate",
+		"cost": 5,
+		"effect": "firerate",
+		"icon": preload("res://assets/sprites/upgrades/firerate.png")
+	},
 	{
 		"id": 6,
 		"name": "Defenders",
 		"description": "Towers around the base to defend",
 		"cost": 10,
 		"effect": "towers",
-		"icon": preload("res://assets/sprites/gun/placeholder.png")
+		"icon": preload("res://assets/sprites/upgrades/tower.png")
 	},
 	{
 		"id": 7,
@@ -73,7 +73,7 @@ var upgrades_list = [
 		"description": "Enables dash, right click to use",
 		"cost": 1,
 		"effect": "Dash",
-		"icon": preload("res://assets/sprites/gun/placeholder.png")
+		"icon": preload("res://assets/sprites/upgrades/dash.png")
 	},
 	{
 		"id": 8,
@@ -81,7 +81,7 @@ var upgrades_list = [
 		"description": "Decreese cooldown of dash",
 		"cost": 10,
 		"effect": "dash_cooldown, right click to use",
-		"icon": preload("res://assets/sprites/gun/placeholder.png")
+		"icon": preload("res://assets/sprites/upgrades/dash.png")
 	},
 	{
 		"id": 9,
@@ -89,7 +89,7 @@ var upgrades_list = [
 		"description": "Increese speed of dash",
 		"cost": 1,
 		"effect": "dash_speed, right click to use",
-		"icon": preload("res://assets/sprites/character/placeholder.png")
+		"icon": preload("res://assets/sprites/upgrades/dash.png")
 	}
 ]
 
@@ -268,9 +268,9 @@ func apply_upgrade_effect(effect: String):
 		"damage_boost":
 			
 			$player/gun.damage_multiplier += 0.3
-		#"shield":
-			#
-			#get_player().activate_shield(5.0)  # 5 seconds
+		"firerate":
+			
+			$player/gun.firerate += 0.5
 			
 		"Dash":
 			get_player().can_dash = true
@@ -304,6 +304,7 @@ func get_player():
 
 
 func _ready() -> void:
+	randomize()
 	randomize_shop()
 	$player/gameover.visible = false
 	$player/shop/VBoxContainer/VBoxcontainer/VBoxContainer/upgrade1.custom_minimum_size = button_minimum_size

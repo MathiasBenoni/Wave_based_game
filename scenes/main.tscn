@@ -300,6 +300,7 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_vertical = 3
 texture = ExtResource("6_tefeu")
+expand_mode = 5
 
 [node name="upgrade3" type="Button" parent="player/shop/VBoxContainer/VBoxContainer3/VBoxContainer"]
 custom_minimum_size = Vector2(200, 77)
