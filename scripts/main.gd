@@ -12,6 +12,8 @@ var temp_damage := 0.0
 var button_minimum_size = Vector2(200, 10)
 
 
+var towers := 5
+
 @export var damage := 10.0
 
 
@@ -49,14 +51,14 @@ var upgrades_list = [
 		"effect": "damage_boost",
 		"icon": preload("res://assets/sprites/gun/placeholder.png")
 	},
-	{
-		"id": 5,
-		"name": "Shield",
-		"description": "Shield for + 2 hitpoints for the base",
-		"cost": 6,
-		"effect": "shield",
-		"icon": preload("res://assets/sprites/gun/placeholder.png")
-	},
+	#{
+		#"id": 5,
+		#"name": "Shield",
+		#"description": "Shield for + 2 hitpoints for the base",
+		#"cost": 6,
+		#"effect": "shield",
+		#"icon": preload("res://assets/sprites/gun/placeholder.png")
+	#},
 	{
 		"id": 6,
 		"name": "Defenders",
@@ -265,10 +267,10 @@ func apply_upgrade_effect(effect: String):
 			
 		"damage_boost":
 			
-			get_player().damage_multiplier += 0.3
-		"shield":
-			
-			get_player().activate_shield(5.0)  # 5 seconds
+			$player/gun.damage_multiplier += 0.3
+		#"shield":
+			#
+			#get_player().activate_shield(5.0)  # 5 seconds
 			
 		"Dash":
 			get_player().can_dash = true
@@ -277,6 +279,10 @@ func apply_upgrade_effect(effect: String):
 		"dash_speed":
 			get_player().dash_speed *= 1.2
 			print("Dash speed: " + str(get_player().dash_speed))
+			
+		"towers":
+			towers += 1
+			print("towers")
 			
 		"skip":
 			print("Shop skipped")
@@ -312,8 +318,15 @@ func _ready() -> void:
 	$player/shop.hide()
 	nextWave()
 	
+var tower_previous = 0
 
 func nextWave():
+	
+	if towers != tower_previous:
+		tower_previous = towers
+		spawn_towers(towers)
+	
+	
 	print("Wave " + str(numberOfWaves))
 	$player/post_wave.visible = false
 	$player/esc_menu.hide()
@@ -443,3 +456,51 @@ func _on_game_over_restart_pressed() -> void:
 func _on_game_over_quit_pressed() -> void:
 	print("QUIT")
 	get_tree().quit()
+
+
+func _on_button_pressed() -> void:
+	print("Skip")
+	apply_upgrade_effect("skip")
+	nextWave()
+	
+
+func spawn_towers(number_of_towers):
+	var tower_scene = preload("res://scenes/tower.tscn")
+	var min_distance = 50.0
+	var max_distance = 100.0
+	var min_tower_spacing = 30.0 
+	var max_attempts = 100 
+	
+	var tower_positions = [] 
+	
+	for n in number_of_towers:
+		var tower_instantiated = tower_scene.instantiate()
+		var valid_position = false
+		var attempts = 0
+		var new_position = Vector2.ZERO
+
+
+		while not valid_position and attempts < max_attempts:
+
+			var angle = randf() * TAU
+			var distance = randf_range(min_distance, max_distance)
+			
+		
+			var offset = Vector2(cos(angle), sin(angle)) * distance
+			new_position = $base.position + offset
+			
+			valid_position = true
+			for existing_pos in tower_positions:
+				if new_position.distance_to(existing_pos) < min_tower_spacing:
+					valid_position = false
+					break
+			
+			attempts += 1
+		
+		if valid_position:
+			tower_instantiated.position = new_position
+			tower_positions.append(new_position)
+			add_child(tower_instantiated)
+		else:
+			print("Warning: Could not find valid position for tower after ", max_attempts, " attempts")
+			tower_instantiated.queue_free() 

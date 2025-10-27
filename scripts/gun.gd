@@ -4,7 +4,7 @@ var bullet_scene = preload("res://scenes/main_character/bullet.tscn")
 
 @export var firerate := 0.5
 
-
+var damage_multiplier := 1.0
 
 var is_hot = false
 
@@ -42,6 +42,7 @@ func shoot():
 	var bullet = bullet_scene.instantiate()
 	bullet.global_position = $barrel.global_position
 	bullet.rotation = rotation
+	bullet.damage *= damage_multiplier
 	$bullets.add_child(bullet)
 	
 

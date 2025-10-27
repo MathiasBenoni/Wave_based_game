@@ -1,27 +1,23 @@
 extends CharacterBody2D
+
+var current_health := 100.0
+
+var number_of_coins := 0
+var move_speed = 0
+
+
+# Upgrades
 @export var sprint := 100.0
 @export var max_sprint := 100.0
 @export var max_health := 100
-var current_health := 100.0
-var normal_speed = 100
-var boost_speed = 150
-var number_of_coins := 0
-var move_speed = 0
 var speed_multiplier := 1.0
-
-var have_died = false
-
-# Invincibility system
-var is_invincible = false
-var invincibility_duration = 0.8
-
-# Sprint system variables
 var sprint_drain_rate = 40.0
 var can_sprint = true
+var normal_speed = 100
+var boost_speed = 150
 
-# Movement variables
-var acceleration = 2000.0
-var friction = 1000.0
+var sprint_multiplier := 1.0
+
 
 # Dash system variables
 @export var dash_speed := 150.0
@@ -32,7 +28,23 @@ var dash_cooldown_timer = 0.0
 var is_dashing = false
 var dash_direction = Vector2.ZERO
 var can_dash = false
-var damage_multiplier := 1.0
+
+
+var have_died = false
+
+# Invincibility system
+var is_invincible = false
+var invincibility_duration = 0.8
+
+# Sprint system variables
+
+
+# Movement variables
+var acceleration = 2000.0
+var friction = 1000.0
+
+
+
 
 var temp_enemy_damage_mult
 
@@ -138,7 +150,7 @@ func handle_sprint(delta: float):
 	if is_trying_to_sprint and can_actually_sprint:
 		sprint -= sprint_drain_rate * delta
 		sprint = max(sprint, 0)
-		move_speed = boost_speed
+		move_speed = boost_speed * sprint_multiplier
 		
 		if sprint <= 0:
 			can_sprint = false

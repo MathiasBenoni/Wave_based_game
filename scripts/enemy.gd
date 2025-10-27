@@ -8,12 +8,15 @@ var spredning = 20
 var max_health := 100.0
 var health = max_health
 
+var damage_multiplier := 1.0
+
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 
 func enemy():
 	pass
 
 func _ready() -> void:
+	add_to_group("enemies")
 	SPEED = randi_range(30, 100)
 	target = randi_range(0, 2)
 	
@@ -73,7 +76,7 @@ func check_player_presense():
 				return
 			if overlapped_body.is_dashing == true:
 				die()
-				
+			
 			attack()
 			
 			

@@ -140,7 +140,6 @@ position = Vector2(500, 287)
 
 [node name="player" parent="." instance=ExtResource("1_misob")]
 position = Vector2(442, 260)
-dash_speed = 150.0
 
 [node name="esc_menu" type="CanvasLayer" parent="player"]
 visible = false
@@ -371,6 +370,23 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 50
 metadata/_edit_use_anchors_ = true
 
+[node name="HBoxContainer" type="HBoxContainer" parent="player/shop"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -270.0
+offset_top = -182.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="skip" type="Button" parent="player/shop/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 100
+text = "Skip"
+
 [node name="post_wave" type="CanvasLayer" parent="player"]
 visible = false
 
@@ -450,5 +466,6 @@ position = Vector2(885, 11)
 
 [connection signal="pressed" from="player/esc_menu/VBoxContainer/HBoxContainer2/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="player/esc_menu/VBoxContainer/HBoxContainer4/quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="player/shop/HBoxContainer/skip" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="player/gameover/VBoxContainer/game_over_restart" to="." method="_on_game_over_restart_pressed"]
 [connection signal="pressed" from="player/gameover/VBoxContainer/game_over_quit" to="." method="_on_game_over_quit_pressed"]
