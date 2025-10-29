@@ -97,22 +97,20 @@ var upgrades_list = [
 		"description": "Adds sprint, shift to use",
 		"cost": 3,
 		"effect": "sprint",
-		"icon": preload("res://assets/sprites/upgrades/piercing.png")
+		"icon": preload("res://assets/sprites/character/sprint_upgrade.png")
 	},
 ]
 
 func set_upgrade_to_button(upgrade_id: int, button_position: int):
-	# Validate inputs
+	
 	if upgrade_id >= upgrades_list.size() or upgrade_id < 0:
 		print("Error: Invalid upgrade_id: ", upgrade_id)
 		return "new_id"
-	elif upgrade_id == 7:
+	elif upgrade_id == 7 and $player.can_dash == true:
 		return "new_id"
-	elif upgrade_id == 8 or upgrade_id == 9:
+	elif (upgrade_id == 8 or upgrade_id == 9) and $player.can_dash == false:
 		if $player.can_dash == false:
 			return "new_id"
-	if upgrade_id == 7 and $player.can_dash == true:
-		randomize_shop()
 	
 	if button_position < 1 or button_position > 4:
 		print("Error: Invalid button_position: ", button_position, " (should be 1-4)")
@@ -278,7 +276,8 @@ func apply_upgrade_effect(effect: String):
 			$player/gun.damage_multiplier += 0.3
 		"firerate":
 			
-			$player/gun.firerate += 0.5
+			if $player/gun.firerate > 0.01:
+				$player/gun.firerate -= 0.01
 			
 		"Dash":
 			get_player().can_dash = true
@@ -291,8 +290,6 @@ func apply_upgrade_effect(effect: String):
 		"towers":
 			towers += 1
 			print("towers")
-		"sprint":
-			$player.can_sprint = true
 		
 		"piercing":
 			$player/gun.piercing += 1
@@ -308,7 +305,9 @@ func get_player_money() -> int:
 
 func spend_money(amount: int):
 	numberOfCoins -= amount
-
+	$player/shop/VBoxContainer2/HBoxContainer/coins.text = str(numberOfCoins)
+	
+	
 func get_player():
 
 	return get_tree().get_root().get_node("main/player")
@@ -337,8 +336,9 @@ var tower_previous = 0
 func nextWave():
 	
 	if towers != tower_previous:
+		
+		spawn_towers(towers - tower_previous)
 		tower_previous = towers
-		spawn_towers(towers)
 	
 	
 	print("Wave " + str(numberOfWaves))

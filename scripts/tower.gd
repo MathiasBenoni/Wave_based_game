@@ -36,7 +36,5 @@ func _on_cooldown_timeout() -> void:
 		bullet.rotation = direction.angle()
 		
 		get_parent().add_child(bullet)
-		
-		print("Shoot")
 	
 	timer_start = true

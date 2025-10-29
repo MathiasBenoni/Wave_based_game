@@ -105,6 +105,7 @@ func handle_dash_input():
 		start_dash()
 
 func start_dash():
+	is_invincible = false
 	if dash_cooldown_timer <= 0:
 		var mouse_pos = get_global_mouse_position()
 		dash_direction = (mouse_pos - global_position).normalized()
@@ -142,22 +143,25 @@ func handle_movement(delta: float):
 		$sprite.play("default")
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 
+var sprint_unlocked = false
+
 func handle_sprint(delta: float):
 	var is_moving = velocity.length() > 0
 	var is_trying_to_sprint = Input.is_action_pressed("sprint") and is_moving
-	var can_actually_sprint = can_sprint and sprint > 0
+	var can_actually_sprint = sprint_unlocked and can_sprint and sprint > 0
 	
 	if is_trying_to_sprint and can_actually_sprint:
 		sprint -= sprint_drain_rate * delta
 		sprint = max(sprint, 0)
-		move_speed = boost_speed
+		move_speed = boost_speed * speed_multiplier
 		
 		if sprint <= 0:
 			can_sprint = false
 	else:
 		move_speed = normal_speed
 		
-		if sprint >= 20:
+		# Only regenerate ability to sprint if the upgrade is unlocked
+		if sprint_unlocked and sprint >= 20:
 			can_sprint = true
 
 func take_damage(damage: float):
