@@ -1,8 +1,9 @@
-extends CharacterBody2D
+extends Node2D
 
 @export var SPEED : int = 300
 var speed_mult = 1
 
+var piercing = 1
 
 @export var damage := 10
 
@@ -13,11 +14,13 @@ func bullet():
 func _process(delta: float) -> void:
 	
 	
+	if piercing == 0:
+		queue_free()
+	
 	SPEED = SPEED * speed_mult
 	
 	
-	
-	
+
 	position += transform.x * SPEED * delta
 
 

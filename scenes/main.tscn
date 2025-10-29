@@ -213,7 +213,7 @@ theme_override_font_sizes/font_size = 50
 text = "Quit"
 
 [node name="shop" type="CanvasLayer" parent="player"]
-layer = 2
+layer = 0
 visible = false
 
 [node name="TextureRect" type="TextureRect" parent="player/shop"]

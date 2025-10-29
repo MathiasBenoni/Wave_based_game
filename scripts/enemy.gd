@@ -101,7 +101,9 @@ func take_damage(body):
 	health -= damage
 	$health.value = health
 	
-	body.queue_free()
+	body.piercing -= 1
+	
+	#body.queue_free()
 	
 	if health <= 0:
 		die()
@@ -111,5 +113,6 @@ func take_damage(body):
 	$AnimatedSprite2D.play("default")
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
+	
 	if body.has_method("bullet"):
 		take_damage(body)

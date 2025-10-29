@@ -161,7 +161,7 @@ func handle_sprint(delta: float):
 			can_sprint = true
 
 func take_damage(damage: float):
-	# Check invincibility - return early without taking damage
+	
 	if is_invincible:
 		return
 	
@@ -177,7 +177,7 @@ func take_damage(damage: float):
 	
 	print("Took damage: ", actual_damage, " | Current health: ", current_health)
 	
-	# Start invincibility frames WITHOUT disabling hitbox
+
 	start_invincibility()
 	
 	# Show damage overlay

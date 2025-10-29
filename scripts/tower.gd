@@ -32,6 +32,7 @@ func _on_cooldown_timeout() -> void:
 		var bullet_scene = preload("res://scenes/main_character/bullet.tscn")
 		var bullet = bullet_scene.instantiate()
 		bullet.global_position = global_position
+		bullet.piercing = 1
 		bullet.rotation = direction.angle()
 		
 		get_parent().add_child(bullet)

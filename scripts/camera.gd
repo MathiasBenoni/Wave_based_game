@@ -15,8 +15,6 @@ func random_offset() -> Vector2:
 
 func _process(delta: float) -> void:
 	
-	if Input.is_action_just_pressed("shake"):
-		apply_shake(1)
 	
 	if shake_strength > 0:
 		shake_strength = lerpf(shake_strength, 0, shake_fade * delta)

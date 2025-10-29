@@ -29,11 +29,11 @@ var upgrades_list = [
 	},
 	{
 		"id": 1,
-		"name": "Double Jump",
-		"description": "Allows double jumping",
+		"name": "Pierceing",
+		"description": "Adds +1 pierce to bullets",
 		"cost": 3,
-		"effect": "sprint, shift to use",
-		"icon": preload("res://assets/sprites/gun/placeholder.png")
+		"effect": "piercing",
+		"icon": preload("res://assets/sprites/upgrades/piercing.png")
 	},
 	{
 		"id": 2,
@@ -254,8 +254,8 @@ func apply_upgrade_effect(effect: String):
 	
 	match effect:
 		"speed_boost":
-		
 			get_player().speed_multiplier += 0.02
+			
 		"sprint":
 			if get_player().can_sprint == true:
 				get_player().sprint_multiplier += 0.02
@@ -366,11 +366,6 @@ func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("esc"):
 		pause()
 		
-	if Input.is_action_just_pressed("test_key"):
-		$player/shop.show()
-	
-	if Input.is_action_just_released("test_key"):
-		$player/shop.hide()
 
 func _process(delta: float) -> void:
 	
