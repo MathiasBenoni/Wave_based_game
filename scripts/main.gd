@@ -90,7 +90,15 @@ var upgrades_list = [
 		"cost": 1,
 		"effect": "dash_speed, right click to use",
 		"icon": preload("res://assets/sprites/upgrades/dash.png")
-	}
+	},
+	{
+		"id": 10,
+		"name": "Sprint",
+		"description": "Adds sprint, shift to use",
+		"cost": 3,
+		"effect": "sprint",
+		"icon": preload("res://assets/sprites/upgrades/piercing.png")
+	},
 ]
 
 func set_upgrade_to_button(upgrade_id: int, button_position: int):
@@ -283,6 +291,11 @@ func apply_upgrade_effect(effect: String):
 		"towers":
 			towers += 1
 			print("towers")
+		"sprint":
+			$player.can_sprint = true
+		
+		"piercing":
+			$player/gun.piercing += 1
 			
 		"skip":
 			print("Shop skipped")
@@ -338,7 +351,7 @@ func nextWave():
 	numberOfWaves += 1
 	print("HEALTH ", str($player.max_health))
 	$player.normal_speed = $player.normal_speed * $player.speed_multiplier
-	$player.can_sprint = true
+	
 	for n in $coins.get_children():
 		$coins.remove_child(n)
 		n.queue_free()
