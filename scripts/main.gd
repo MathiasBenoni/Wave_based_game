@@ -102,21 +102,25 @@ var upgrades_list = [
 ]
 
 func set_upgrade_to_button(upgrade_id: int, button_position: int):
+
 	
 	if upgrade_id >= upgrades_list.size() or upgrade_id < 0:
 		print("Error: Invalid upgrade_id: ", upgrade_id)
 		return "new_id"
-	elif upgrade_id == 7 and $player.can_dash == true:
+	
+
+	if upgrade_id == 7 and $player.can_dash == true:
+		print("new_id")
 		return "new_id"
-	elif (upgrade_id == 8 or upgrade_id == 9) and $player.can_dash == false:
-		if $player.can_dash == false:
-			return "new_id"
+	if $player.can_dash == false:
+		if (upgrade_id == 8 or upgrade_id == 9):
+				return "new_id"
 	
 	if button_position < 1 or button_position > 4:
 		print("Error: Invalid button_position: ", button_position, " (should be 1-4)")
 		return "new_position"
 	
-		
+	
 	var upgrade_data = upgrades_list[upgrade_id]
 	
 	# Get the button node path based on position
@@ -212,29 +216,66 @@ func print_scene_tree(node: Node, indent: int):
 	for child in node.get_children():
 		print_scene_tree(child, indent + 1)
 
+
+
+
+
+
 func randomize_shop():
 	var available_upgrades = range(upgrades_list.size())  # [0, 1, 2, 3, 4, 5, ...]
 	available_upgrades.shuffle()
 	
 	var selected_upgrades = []
-	var upgrade_index = 0
+	var dash_unlock_id = 7  # ID for the Dash unlock
+	var player = get_player()
 	
-	# Keep trying until we have 4 valid unique upgrades
-	while selected_upgrades.size() < 4 and upgrade_index < available_upgrades.size():
-		var upgrade_id = available_upgrades[upgrade_index]
-		var button_position = selected_upgrades.size() + 1
+	# If player doesn't have dash yet, prioritize offering the dash unlock
+	if not player.can_dash:
+		# Try to include dash unlock in the shop
+		if dash_unlock_id in available_upgrades:
+			available_upgrades.erase(dash_unlock_id)
+			available_upgrades.insert(0, dash_unlock_id)  # Put it first
+	
+	# Loop until we have 4 valid upgrades or run out of options
+	while selected_upgrades.size() < 4:
+		if available_upgrades.is_empty():
+			print("Warning: Ran out of upgrades to pick from — rerolling entire shop.")
+			available_upgrades = range(upgrades_list.size())
+			available_upgrades.shuffle()
+			
+			# Re-prioritize dash unlock if needed
+			if not player.can_dash and dash_unlock_id in available_upgrades:
+				available_upgrades.erase(dash_unlock_id)
+				available_upgrades.insert(0, dash_unlock_id)
 		
+		var upgrade_id = available_upgrades.pop_front()  # Take from front (prioritized)
+		var upgrade_data = upgrades_list[upgrade_id]
+		
+		# Check for Dash-related logic BEFORE setting to button
+		if upgrade_data["effect"] == "Dash" and player.can_dash:
+			print("Skipping Dash unlock - already unlocked")
+			continue  # Skip Dash if already unlocked
+		
+		# Check if effect contains "dash" and player doesn't have dash
+		if not player.can_dash and ("dash_speed" in upgrade_data["effect"] or "dash_cooldown" in upgrade_data["effect"]):
+			print("Skipping dash upgrade - player doesn't have dash yet. Effect: ", upgrade_data["effect"])
+			continue  # Skip dash upgrades if player doesn't have dash yet
+		
+		# Now we know the upgrade is valid, set it to the button
+		var button_position = selected_upgrades.size() + 1
 		var result = set_upgrade_to_button(upgrade_id, button_position)
 		
-		if result != "new_id":
-			# This upgrade is valid, add it to our selected list
-			selected_upgrades.append(upgrade_id)
+		# If set_upgrade_to_button still rejects it, skip and try another
+		if result == "new_id":
+			print("set_upgrade_to_button rejected upgrade_id: ", upgrade_id)
+			continue
 		
-		upgrade_index += 1
+		selected_upgrades.append(upgrade_id)
 	
-	# If we couldn't find 4 valid upgrades, fill remaining slots with valid ones
-	if selected_upgrades.size() < 4:
-		print("Warning: Could not find 4 unique valid upgrades")		
+	print("Shop randomized successfully with valid upgrades.")
+
+
+
 
 func _on_upgrade_button_pressed(button):
 	var upgrade_data = button.get_meta("upgrade_data")
@@ -263,8 +304,6 @@ func apply_upgrade_effect(effect: String):
 			get_player().speed_multiplier += 0.02
 			
 		"sprint":
-			if get_player().can_sprint == true:
-				get_player().sprint_multiplier += 0.02
 			get_player().can_sprint = true
 			
 		"extra_health":

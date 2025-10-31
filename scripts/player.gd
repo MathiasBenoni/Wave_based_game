@@ -27,6 +27,8 @@ var dash_timer = 0.0
 var dash_cooldown_timer = 0.0
 var is_dashing = false
 var dash_direction = Vector2.ZERO
+
+
 var can_dash = false
 
 
