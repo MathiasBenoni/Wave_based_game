@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://ca051vklpv2o6"]
+[gd_scene load_steps=16 format=4 uid="uid://ca051vklpv2o6"]
 
 [ext_resource type="PackedScene" uid="uid://0kl88blhnul3" path="res://scenes/main_character/player.tscn" id="1_misob"]
 [ext_resource type="Script" uid="uid://ck0qm637vt8eq" path="res://scripts/main.gd" id="1_xfbeo"]
@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://b4ibq8jw0f528" path="res://assets/sprites/coins/ground1.png" id="5_u0103"]
 [ext_resource type="Texture2D" uid="uid://cxxav8huwpjb5" path="res://assets/sprites/character/placeholder.png" id="6_tefeu"]
 [ext_resource type="Texture2D" uid="uid://du1c114rtldgx" path="res://assets/sprites/coins/ash.png" id="7_o6xl0"]
-[ext_resource type="PackedScene" uid="uid://5xafmbc00iqv" path="res://scenes/tower.tscn" id="8_tipki"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_o6xl0"]
 vertices = PackedVector2Array(1046, 522, 1046, 566, 1030, 566, 1018, 522, 1018, 570, 1030, 582, 1002, 582, 1002, 570, 1046, 90, 1046, 422, 1030, 422, 906, 298, 906, 118, 1030, 90, 874, 490, 874, 438, 918, 486, 918, 518, 902, 518, 218, 394, 218, 310, 678, 138, 726, 390, 726, 406, 710, 406, 934, -6, 950, -6, 950, 10, 810, 86, 746, 38, 966, 10, 966, 26, 982, 26, 982, 42, 998, 42, 998, 58, 1014, 58, 1014, 74, 1030, 74, 810, 118, 746, 86, 726, 138, 726, 218, 742, 218, 742, 234, 758, 234, 758, 250, 742, 374, 774, 250, 774, 266, 806, 266, 806, 282, 822, 282, 822, 298, 1030, 438, 966, 438, 966, 454, 950, 454, 858, 406, 950, 470, 934, 470, 934, 486, 858, 438, 842, 406, 842, 374, 742, 390, 186, 310, 186, 294, 118, 294, 118, 310, 102, 310, -38, 90, 102, 326, 86, 326, 86, 342, 70, 342, 70, 358, 54, 358, 54, 442, 86, 442, 86, 458, 74, 534, 42, 518, 26, 502, 170, 458, 170, 442, 186, 442, 186, 410, 202, 410, 202, 394, 710, 458, 726, 458, 726, 474, 138, 566, 742, 474, 742, 490, 758, 490, 758, 506, 774, 506, 774, 522, 870, 566, 826, 522, 826, 506, 842, 506, 886, 534, 886, 566, 842, 490, 902, 534, 870, 582, 138, 582, 106, 566, 106, 550, 74, 550, 42, 534, 26, 518, -6, 502, -6, 486, -22, 486, -22, 470, -38, 470, -38, 454, -54, 454, -54, 90, -38, 26, -22, 26, -22, 10, -6, 10, -6, -6, 10, -6, 678, 38, 10, -22, 934, -22)
@@ -465,9 +464,6 @@ position = Vector2(12, 8)
 
 [node name="spawn2" type="Marker2D" parent="spawns"]
 position = Vector2(885, 11)
-
-[node name="tower" parent="." instance=ExtResource("8_tipki")]
-position = Vector2(533, 294)
 
 [connection signal="pressed" from="player/esc_menu/VBoxContainer/HBoxContainer2/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="player/esc_menu/VBoxContainer/HBoxContainer4/quit" to="." method="_on_quit_pressed"]

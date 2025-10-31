@@ -11,7 +11,6 @@ var numberOfCoins := 0
 var temp_damage := 0.0
 var button_minimum_size = Vector2(200, 10)
 
-
 var towers := 0
 
 @export var damage := 10.0
@@ -99,6 +98,14 @@ var upgrades_list = [
 		"effect": "sprint",
 		"icon": preload("res://assets/sprites/character/sprint_upgrade.png")
 	},
+	{
+		"id": 11,
+		"name": "Heal",
+		"description": "Get 100% health",
+		"cost": 5,
+		"effect": "heal",
+		"icon": preload("res://assets/sprites/upgrades/card_health_upgrade.png")
+	},
 ]
 
 func set_upgrade_to_button(upgrade_id: int, button_position: int):
@@ -123,7 +130,7 @@ func set_upgrade_to_button(upgrade_id: int, button_position: int):
 	
 	var upgrade_data = upgrades_list[upgrade_id]
 	
-	# Get the button node path based on position
+
 	var button_path = ""
 	var texture_rect_path = ""
 	match button_position:
@@ -140,22 +147,22 @@ func set_upgrade_to_button(upgrade_id: int, button_position: int):
 			button_path = "player/shop/VBoxContainer/VBoxContainer4/VBoxContainer/upgrade4"
 			texture_rect_path = "player/shop/VBoxContainer/VBoxContainer4/VBoxContainer/TextureRect"
 	
-	# Get the button node
+	
 	var button_node = get_node(button_path)
 	var texture_rect = get_node(texture_rect_path)
 	
-	# Update button text and properties
+
 	button_node.text = str(upgrade_data.cost)
 	texture_rect.texture = upgrade_data.icon
 	
-	# Store upgrade data in the button for later use
+
 	button_node.set_meta("upgrade_data", upgrade_data)
 	
-	# Connect the pressed signal if not already connected
+	
 	if not button_node.pressed.is_connected(_on_upgrade_button_pressed):
 		button_node.pressed.connect(_on_upgrade_button_pressed.bind(button_node))
 	
-	# Connect hover signals for showing description
+	
 	if not button_node.mouse_entered.is_connected(_on_upgrade_button_hover_enter):
 		button_node.mouse_entered.connect(_on_upgrade_button_hover_enter.bind(button_node))
 
@@ -172,15 +179,15 @@ func _on_upgrade_button_hover_enter(button):
 	var upgrade_data = button.get_meta("upgrade_data")
 	print("Upgrade data: ", upgrade_data.name)
 	
-	# Get the info label - it should be a sibling of the VBoxContainer that contains the buttons
+	
 	var info_label = $player/shop/Info
 	
 	if info_label:
-		# Display upgrade name and description
+		
 		info_label.text = upgrade_data.name + "\n" + upgrade_data.description
 		print("Set info text to: ", info_label.text)
 	else:
-		# Try alternative path
+		
 		var shop_node = button.get_parent()
 		while shop_node != null and shop_node.name != "shop":
 			shop_node = shop_node.get_parent()
@@ -192,7 +199,7 @@ func _on_upgrade_button_hover_enter(button):
 
 func _on_upgrade_button_hover_exit(button):
 	
-	# Same logic as enter function
+	
 	var info_label = $player/shop/Info
 	
 	if not info_label:
@@ -204,11 +211,11 @@ func _on_upgrade_button_hover_exit(button):
 			info_label = shop_node.get_node("Info")
 	
 	if info_label:
-		# Clear the description when mouse leaves
+		
 		info_label.text = ""
 	
 
-# Helper function to debug scene tree structure
+
 func print_scene_tree(node: Node, indent: int):
 	var _indent_str = ""
 	for i in range(indent):
@@ -222,50 +229,47 @@ func print_scene_tree(node: Node, indent: int):
 
 
 func randomize_shop():
-	var available_upgrades = range(upgrades_list.size())  # [0, 1, 2, 3, 4, 5, ...]
+	var available_upgrades = range(upgrades_list.size())
 	available_upgrades.shuffle()
 	
 	var selected_upgrades = []
-	var dash_unlock_id = 7  # ID for the Dash unlock
+	var dash_unlock_id = 7  
 	var player = get_player()
 	
-	# If player doesn't have dash yet, prioritize offering the dash unlock
+	
 	if not player.can_dash:
-		# Try to include dash unlock in the shop
+		
 		if dash_unlock_id in available_upgrades:
 			available_upgrades.erase(dash_unlock_id)
-			available_upgrades.insert(0, dash_unlock_id)  # Put it first
+			available_upgrades.insert(0, dash_unlock_id) 
 	
-	# Loop until we have 4 valid upgrades or run out of options
+	
 	while selected_upgrades.size() < 4:
 		if available_upgrades.is_empty():
 			print("Warning: Ran out of upgrades to pick from — rerolling entire shop.")
 			available_upgrades = range(upgrades_list.size())
 			available_upgrades.shuffle()
 			
-			# Re-prioritize dash unlock if needed
+			
 			if not player.can_dash and dash_unlock_id in available_upgrades:
 				available_upgrades.erase(dash_unlock_id)
 				available_upgrades.insert(0, dash_unlock_id)
 		
-		var upgrade_id = available_upgrades.pop_front()  # Take from front (prioritized)
+		var upgrade_id = available_upgrades.pop_front()  
 		var upgrade_data = upgrades_list[upgrade_id]
 		
-		# Check for Dash-related logic BEFORE setting to button
 		if upgrade_data["effect"] == "Dash" and player.can_dash:
 			print("Skipping Dash unlock - already unlocked")
-			continue  # Skip Dash if already unlocked
-		
-		# Check if effect contains "dash" and player doesn't have dash
+			continue 
+	
 		if not player.can_dash and ("dash_speed" in upgrade_data["effect"] or "dash_cooldown" in upgrade_data["effect"]):
 			print("Skipping dash upgrade - player doesn't have dash yet. Effect: ", upgrade_data["effect"])
-			continue  # Skip dash upgrades if player doesn't have dash yet
+			continue  
 		
-		# Now we know the upgrade is valid, set it to the button
 		var button_position = selected_upgrades.size() + 1
 		var result = set_upgrade_to_button(upgrade_id, button_position)
 		
-		# If set_upgrade_to_button still rejects it, skip and try another
+
 		if result == "new_id":
 			print("set_upgrade_to_button rejected upgrade_id: ", upgrade_id)
 			continue
@@ -333,6 +337,9 @@ func apply_upgrade_effect(effect: String):
 		"piercing":
 			$player/gun.piercing += 1
 			
+		"heal":
+			$player.current_health = $player.max_health
+			
 		"skip":
 			print("Shop skipped")
 		_:
@@ -385,7 +392,6 @@ func nextWave():
 	$player/esc_menu.hide()
 	$player/shop.hide()
 	$player.position = Vector2(450,280)
-	$player.current_health = $player.max_health
 	$player.sprint = 100
 	numberOfWaves += 1
 	print("HEALTH ", str($player.max_health))
@@ -465,7 +471,7 @@ func post_wave():
 func shop():
 	randomize_shop()
 	$player/shop.visible = true
-	# Clear info labeldwawswd when shop opens
+	
 	var info_label = $player/shop/Info
 	if info_label:
 		info_label.text = ""
@@ -480,7 +486,7 @@ func gameover():
 	get_tree().paused = true
 	$player/gameover.visible = true
 	
-	#get_tree().change_scene_to_file("res://scenes/startscreen.tscn")
+
 
 
 func _on_player_i_died() -> void:
@@ -497,7 +503,7 @@ func _on_restart_pressed() -> void:
 
 func _on_game_over_restart_pressed() -> void:
 	print("RESTART")
-	get_tree().paused = false  # Unpause the game first!
+	get_tree().paused = false  
 	get_tree().reload_current_scene()
 
 
