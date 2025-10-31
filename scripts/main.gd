@@ -312,7 +312,6 @@ func apply_upgrade_effect(effect: String):
 			
 		"extra_health":
 			get_player().max_health += 25
-			get_player().current_health += 25
 			
 		"damage_boost":
 			
