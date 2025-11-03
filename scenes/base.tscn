@@ -1,17 +1,61 @@
-[gd_scene load_steps=6 format=3 uid="uid://bvj3m373d5jtt"]
+[gd_scene load_steps=10 format=3 uid="uid://bvj3m373d5jtt"]
 
 [ext_resource type="Script" uid="uid://cgk05dgueqyce" path="res://scripts/base.gd" id="1_0k4gx"]
-[ext_resource type="Texture2D" uid="uid://cbnjhmbotomf3" path="res://assets/sprites/base/base_1.png" id="1_f4aa5"]
+[ext_resource type="Texture2D" uid="uid://dyult1ajfyhji" path="res://assets/sprites/base/base_2_5.png" id="2_hh5oj"]
+[ext_resource type="Texture2D" uid="uid://b6ew80kp0nvma" path="res://assets/sprites/base/base_2.png" id="2_t45w4"]
 [ext_resource type="Texture2D" uid="uid://cli5twyfbuk57" path="res://assets/sprites/character/healthbar_placeholder.png" id="3_t45w4"]
+[ext_resource type="Texture2D" uid="uid://dfuun1ok74r1g" path="res://assets/sprites/base/base_2_4.png" id="4_vqfsp"]
+[ext_resource type="Texture2D" uid="uid://csbnl5hva87al" path="res://assets/sprites/base/base_2_3.png" id="5_i6jx3"]
+[ext_resource type="Texture2D" uid="uid://b78ngs4y47dth" path="res://assets/sprites/base/base_2_2.png" id="6_jn13j"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_67wly"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_f4aa5")
+"texture": ExtResource("2_hh5oj")
 }],
 "loop": true,
-"name": &"default",
+"name": &"10",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_t45w4")
+}],
+"loop": true,
+"name": &"100",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_vqfsp")
+}],
+"loop": true,
+"name": &"20",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_vqfsp")
+}],
+"loop": true,
+"name": &"40",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_i6jx3")
+}],
+"loop": true,
+"name": &"50",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_jn13j")
+}],
+"loop": true,
+"name": &"75",
 "speed": 5.0
 }]
 
@@ -20,18 +64,21 @@ size = Vector2(258, 145)
 
 [node name="base" type="Area2D"]
 scale = Vector2(0.2, 0.2)
+collision_layer = 3
 script = ExtResource("1_0k4gx")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-3, -56)
-scale = Vector2(4, 4)
+scale = Vector2(8, 8)
 sprite_frames = SubResource("SpriteFrames_67wly")
+animation = &"100"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_vqemj")
 
 [node name="health" type="TextureProgressBar" parent="."]
+visible = false
 z_index = -1
 anchors_preset = 8
 anchor_left = 0.5
@@ -39,9 +86,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -125.0
-offset_top = -111.0
+offset_top = -106.0
 offset_right = 120.0
-offset_bottom = -84.0
+offset_bottom = -79.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 8

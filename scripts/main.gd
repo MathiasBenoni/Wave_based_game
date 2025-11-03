@@ -11,6 +11,8 @@ var numberOfCoins := 0
 var temp_damage := 0.0
 var button_minimum_size = Vector2(200, 10)
 
+var base_health := 100.0
+
 var towers := 0
 
 @export var damage := 10.0
@@ -368,7 +370,7 @@ func _ready() -> void:
 	$player/shop/VBoxContainer/VBoxContainer2/VBoxContainer/upgrade2.custom_minimum_size = button_minimum_size
 	$player/shop/VBoxContainer/VBoxContainer3/VBoxContainer/upgrade3.custom_minimum_size = button_minimum_size
 	$player/shop/VBoxContainer/VBoxContainer4/VBoxContainer/upgrade4.custom_minimum_size = button_minimum_size
-
+	$base.health = base_health
 	$player/post_wave.visible = false
 	$player/esc_menu.process_mode = Node.PROCESS_MODE_WHEN_PAUSED 
 
@@ -422,7 +424,7 @@ func _input(event: InputEvent) -> void:
 	event = event
 	if Input.is_action_just_pressed("esc"):
 		pause()
-		
+
 
 func _process(delta: float) -> void:
 	
@@ -434,12 +436,6 @@ func _process(delta: float) -> void:
 			ispostwavetrue = false
 			print("Shop!")
 			shop()
-		
-
-
-
-
-
 
 func pause():
 	
@@ -459,13 +455,11 @@ func coin():
 
 func minus_life():
 	$player.take_damage(damage)
-		
 
 func post_wave():
 	$player/post_wave.visible = true
 	ispostwavetrue = true
 	pass
-
 
 func shop():
 	randomize_shop()
@@ -479,38 +473,23 @@ func shop():
 func _on_continue_pressed() -> void:
 	pause()
 
-
 func gameover():
-	
 	get_tree().paused = true
 	$player/gameover.visible = true
-	
-
-
 
 func _on_player_i_died() -> void:
 	gameover()
-
-
 func _on_quit_pressed() -> void:
 	print("Quit")
-
-
 func _on_restart_pressed() -> void:
 	get_tree().reload_current_scene()
-
-
 func _on_game_over_restart_pressed() -> void:
 	print("RESTART")
 	get_tree().paused = false  
 	get_tree().reload_current_scene()
-
-
 func _on_game_over_quit_pressed() -> void:
 	print("QUIT")
 	get_tree().quit()
-
-
 func _on_button_pressed() -> void:
 	print("Skip")
 	apply_upgrade_effect("skip")
@@ -557,3 +536,12 @@ func spawn_towers(number_of_towers):
 		else:
 			print("Warning: Could not find valid position for tower after ", max_attempts, " attempts")
 			tower_instantiated.queue_free() 
+
+
+
+func minus_base_life():
+	base_health -= damage * 0.8
+	$base.health = base_health
+	print(base_health)
+	
+	pass

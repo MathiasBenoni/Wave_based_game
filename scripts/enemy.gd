@@ -116,3 +116,29 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 	
 	if body.has_method("bullet"):
 		take_damage(body)
+
+
+func _process(delta: float) -> void:
+	
+	if entered_base == true and cooldown == false:
+		$cooldown.start()
+		cooldown = true
+		get_tree().get_root().get_node("main").minus_base_life()
+
+var cooldown := false
+var entered_base := false
+
+func _on_area_2d_area_entered(area: Area2D) -> void:
+	
+	if area.has_method("base"):
+		entered_base = true
+		
+
+
+func _on_area_2d_area_exited(area: Area2D) -> void:
+	if area.has_method("base"):
+		entered_base = false
+
+
+func _on_cooldown_timeout() -> void:
+	cooldown = false
