@@ -43,7 +43,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
-"speed": 1.0
+"speed": 2.0
 }]
 
 [node name="enemy" type="CharacterBody2D"]

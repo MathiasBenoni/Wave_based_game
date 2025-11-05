@@ -13,7 +13,7 @@ var button_minimum_size = Vector2(200, 10)
 
 var base_health := 100.0
 
-var towers := 1
+var towers := 0
 
 @export var damage := 10.0
 

@@ -69,12 +69,13 @@ func _physics_process(delta: float) -> void:
 		check_player_presense()
 
 func check_player_presense():
+	
 	var area = $Area2D
 
 	for overlapped_body in area.get_overlapping_bodies():
 		if overlapped_body.name == "player":
 			if overlapped_body.is_invincible == true:
-				return
+				return 
 			if overlapped_body.is_dashing == true:
 				die()
 			
@@ -99,9 +100,17 @@ func attack():
 	
 	$attack_anim.play("default")
 	
+	await $attack_anim.frame_changed
+	
+	var area = $Area2D
+	for overlapped_body in area.get_overlapping_bodies():
+		if overlapped_body.name == "player":
+			player_minuslife()
+	
 	await $attack_anim.animation_looped
 	
-	player_minuslife()
+	
+	
 	is_attacking = false
 	$attack_anim.stop()
 
@@ -131,11 +140,14 @@ func take_damage(body):
 	await get_tree().create_timer(0.1).timeout
 	$AnimatedSprite2D.play("default")
 
+
+
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	
 	if body.has_method("bullet"):
 		take_damage(body)
-
+	
+		
 
 func _process(_delta: float) -> void:
 	
@@ -157,6 +169,9 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.has_method("base"):
 		entered_base = false
+		
+
+
 
 
 func _on_cooldown_timeout() -> void:
