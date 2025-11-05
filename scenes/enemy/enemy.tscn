@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://vnvvaa0hjx8k"]
+[gd_scene load_steps=11 format=3 uid="uid://vnvvaa0hjx8k"]
 
 [ext_resource type="Texture2D" uid="uid://p8vth31ylv2c" path="res://assets/sprites/enemy/enemy_1.png" id="1_0xc1j"]
 [ext_resource type="Script" uid="uid://d3o0wyavrwsuy" path="res://scripts/enemy.gd" id="1_v2ov6"]
 [ext_resource type="Texture2D" uid="uid://cede7gq3dj76q" path="res://assets/sprites/enemy/enemy_1_damaged.png" id="2_40wdo"]
 [ext_resource type="Texture2D" uid="uid://cli5twyfbuk57" path="res://assets/sprites/character/healthbar_placeholder.png" id="4_tjssy"]
+[ext_resource type="Texture2D" uid="uid://5vvxaus8jwk8" path="res://assets/sprites/slash_1_prototype.png" id="6_nbhyu"]
+[ext_resource type="Texture2D" uid="uid://ceyp7pn5q8jei" path="res://assets/sprites/slash_prototype.png" id="7_13gj6"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_435ot"]
 animations = [{
@@ -29,6 +31,20 @@ radius = 25.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tjssy"]
 radius = 32.499996
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4efjx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_nbhyu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_13gj6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 1.0
+}]
 
 [node name="enemy" type="CharacterBody2D"]
 scale = Vector2(0.4, 0.4)
@@ -67,6 +83,9 @@ shape = SubResource("CircleShape2D_tjssy")
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 
 [node name="cooldown" type="Timer" parent="."]
+
+[node name="attack_anim" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_4efjx")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

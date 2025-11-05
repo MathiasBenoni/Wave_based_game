@@ -49,23 +49,24 @@ func update_target_position():
 
 func _physics_process(delta: float) -> void:
 	delta = delta
-	# Update target every frame for dynamic following
-	update_target_position()
 	
-	# Check if navigation is working
-	if not navigation_agent.is_navigation_finished():
-		# Get next position in path
-		var next_path_position = navigation_agent.get_next_path_position()
-		var direction = (next_path_position - global_position).normalized()
+	if is_attacking == false:
+
+		update_target_position()
+
+		if not navigation_agent.is_navigation_finished():
+
+			var next_path_position = navigation_agent.get_next_path_position()
+			var direction = (next_path_position - global_position).normalized()
+			
+			velocity = direction * SPEED
+			move_and_slide()
+		else:
+			
+			velocity = Vector2.ZERO
 		
-		velocity = direction * SPEED
-		move_and_slide()
-	else:
-		# If finished navigating, just stop
-		velocity = Vector2.ZERO
-	
-	# Check for player collision
-	check_player_presense()
+		
+		check_player_presense()
 
 func check_player_presense():
 	var area = $Area2D
@@ -81,11 +82,29 @@ func check_player_presense():
 			
 			
 
+var is_attacking := false
+
 func attack():
 	
+	is_attacking = true
 	
+	velocity = Vector2.ZERO
+	
+	var player = get_tree().get_root().get_node("main/player")
+	var direction_to_player = (player.global_position - global_position).normalized()
+	
+	
+	$attack_anim.position = direction_to_player * 35
+	$attack_anim.rotation = direction_to_player.angle()
+	
+	$attack_anim.play("default")
+	
+	await $attack_anim.animation_looped
 	
 	player_minuslife()
+	is_attacking = false
+	$attack_anim.stop()
+
 
 func player_minuslife():
 	get_tree().get_root().get_node("main").minus_life()
