@@ -118,7 +118,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		take_damage(body)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	if entered_base == true and cooldown == false:
 		$cooldown.start()

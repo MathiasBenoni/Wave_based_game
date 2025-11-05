@@ -7,16 +7,17 @@
 size = Vector2(28, 18)
 
 [node name="tower" type="StaticBody2D"]
-z_index = 7
+z_index = 2
+scale = Vector2(0.8, 0.8)
 script = ExtResource("1_ay4al")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0.99999994, -34.000004)
+position = Vector2(1, 3.0000014)
 scale = Vector2(2.5, 2.5)
 texture = ExtResource("2_ay4al")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -3)
+position = Vector2(0, 34)
 shape = SubResource("RectangleShape2D_2x682")
 
 [node name="cooldown" type="Timer" parent="."]

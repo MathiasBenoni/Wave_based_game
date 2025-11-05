@@ -13,11 +13,11 @@ var button_minimum_size = Vector2(200, 10)
 
 var base_health := 100.0
 
-var towers := 0
+var towers := 1
 
 @export var damage := 10.0
 
-
+var is_inside = true
 
 var upgrades_list = [
 	{
@@ -382,12 +382,14 @@ var tower_previous = 0
 
 func nextWave():
 	
+	is_inside = true
+	
 	if towers != tower_previous:
 		
 		spawn_towers(towers - tower_previous)
 		tower_previous = towers
-	
-	
+	$player/CanvasLayer.visible = true
+	$Timer.start()
 	print("Wave " + str(numberOfWaves))
 	$player/post_wave.visible = false
 	$player/esc_menu.hide()
@@ -428,14 +430,13 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	
+	$player/CanvasLayer/timer_label.text = str(int(roundi($Timer.time_left)))
+	
+	
 	delta = delta
 	if $enemies.get_child_count() == 0:
 		post_wave()
-		if Input.is_action_just_pressed("enter"):
-			$player/post_wave.visible = false
-			ispostwavetrue = false
-			print("Shop!")
-			shop()
+		
 
 func pause():
 	
@@ -457,11 +458,30 @@ func minus_life():
 	$player.take_damage(damage)
 
 func post_wave():
-	$player/post_wave.visible = true
-	ispostwavetrue = true
-	pass
+	
+	if is_inside == true:
+		$player/post_wave.visible = true
+		ispostwavetrue = true
+		
+	
+	else:
+		$player/post_wave.visible = false
+		ispostwavetrue = false
+	
+	if Input.is_action_just_pressed("enter") and ispostwavetrue == true:
+			$player/post_wave.visible = false
+			ispostwavetrue = false
+			print("Shop!")
+			shop()
+	
+	
 
 func shop():
+	
+	$player/post_wave.visible = false
+	$player/CanvasLayer.visible = false
+	$Timer.stop()
+	
 	randomize_shop()
 	$player/shop.visible = true
 	
@@ -498,8 +518,8 @@ func _on_button_pressed() -> void:
 
 func spawn_towers(number_of_towers):
 	var tower_scene = preload("res://scenes/tower.tscn")
-	var min_distance = 50.0
-	var max_distance = 100.0
+	var min_distance = 75.0
+	var max_distance = 130.0
 	var min_tower_spacing = 30.0 
 	var max_attempts = 100 
 	
@@ -537,11 +557,34 @@ func spawn_towers(number_of_towers):
 			print("Warning: Could not find valid position for tower after ", max_attempts, " attempts")
 			tower_instantiated.queue_free() 
 
-
+var ParticleScene = preload("res://scenes/particles.tscn")
 
 func minus_base_life():
-	base_health -= damage * 0.8
+	base_health -= damage * 0.4
 	$base.health = base_health
 	print(base_health)
 	
-	pass
+	spawn_particles($base.position)
+	
+func spawn_particles(pos: Vector2) -> void:
+	var particles = ParticleScene.instantiate()
+	particles.position = pos
+	add_child(particles)
+	await get_tree().create_timer(0.3).timeout
+
+
+func _on_timer_timeout() -> void:
+	print("game_over")
+
+
+
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.has_method("player"):
+		is_inside = true
+
+
+func _on_area_2d_body_exited(body: Node2D) -> void:
+	if body.has_method("player"):
+		is_inside = false

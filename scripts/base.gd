@@ -10,7 +10,7 @@ func _ready() -> void:
 
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	if health <= 100 and health > 75:
 		$AnimatedSprite2D.play("100")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=4 uid="uid://ca051vklpv2o6"]
+[gd_scene load_steps=17 format=4 uid="uid://ca051vklpv2o6"]
 
 [ext_resource type="PackedScene" uid="uid://0kl88blhnul3" path="res://scenes/main_character/player.tscn" id="1_misob"]
 [ext_resource type="Script" uid="uid://ck0qm637vt8eq" path="res://scripts/main.gd" id="1_xfbeo"]
@@ -118,6 +118,9 @@ physics_layer_0/collision_layer = 129
 navigation_layer_0/layers = 1
 sources/0 = SubResource("TileSetAtlasSource_jyhfs")
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_o6xl0"]
+radius = 535.0934
+
 [node name="main" type="Node"]
 script = ExtResource("1_xfbeo")
 
@@ -137,6 +140,11 @@ tile_set = SubResource("TileSet_tbgi4")
 [node name="base" parent="." instance=ExtResource("4_6s6n4")]
 z_index = -1
 position = Vector2(500, 287)
+
+[node name="Area2D" type="Area2D" parent="base"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="base/Area2D"]
+shape = SubResource("CircleShape2D_o6xl0")
 
 [node name="player" parent="." instance=ExtResource("1_misob")]
 position = Vector2(442, 260)
@@ -389,11 +397,18 @@ theme_override_font_sizes/font_size = 100
 text = "Skip"
 
 [node name="post_wave" type="CanvasLayer" parent="player"]
-visible = false
 
 [node name="Label" type="Label" parent="player/post_wave"]
-offset_right = 602.0
-offset_bottom = 69.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -301.0
+offset_top = -69.0
+offset_right = 301.0
+grow_horizontal = 2
+grow_vertical = 0
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 50
 text = "Press enter to go to shop"
@@ -457,6 +472,19 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 0, 0.160784, 0.403922)
 
+[node name="CanvasLayer" type="CanvasLayer" parent="player"]
+
+[node name="timer_label" type="Label" parent="player/CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -85.5
+offset_right = 85.5
+offset_bottom = 137.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 100
+text = "120"
+
 [node name="spawns" type="Node" parent="."]
 
 [node name="spawn1" type="Marker2D" parent="spawns"]
@@ -465,8 +493,14 @@ position = Vector2(12, 8)
 [node name="spawn2" type="Marker2D" parent="spawns"]
 position = Vector2(885, 11)
 
+[node name="Timer" type="Timer" parent="."]
+wait_time = 120.0
+
+[connection signal="body_entered" from="base/Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="base/Area2D" to="." method="_on_area_2d_body_exited"]
 [connection signal="pressed" from="player/esc_menu/VBoxContainer/HBoxContainer2/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="player/esc_menu/VBoxContainer/HBoxContainer4/quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="player/shop/HBoxContainer/skip" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="player/gameover/VBoxContainer/game_over_restart" to="." method="_on_game_over_restart_pressed"]
 [connection signal="pressed" from="player/gameover/VBoxContainer/game_over_quit" to="." method="_on_game_over_quit_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

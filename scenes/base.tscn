@@ -60,7 +60,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vqemj"]
-size = Vector2(258, 145)
+size = Vector2(185, 87)
 
 [node name="base" type="Area2D"]
 scale = Vector2(0.2, 0.2)
@@ -74,7 +74,8 @@ sprite_frames = SubResource("SpriteFrames_67wly")
 animation = &"100"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -0.5)
+position = Vector2(-2.499993, 28.499989)
+scale = Vector2(0.99999976, 0.99999976)
 shape = SubResource("RectangleShape2D_vqemj")
 
 [node name="health" type="TextureProgressBar" parent="."]
