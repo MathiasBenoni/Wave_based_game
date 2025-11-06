@@ -13,6 +13,8 @@ var button_minimum_size = Vector2(200, 10)
 
 var base_health := 100.0
 
+const MAX_TOWERS := 7
+
 var towers := 0
 
 @export var damage := 10.0
@@ -114,19 +116,18 @@ func set_upgrade_to_button(upgrade_id: int, button_position: int):
 
 	
 	if upgrade_id >= upgrades_list.size() or upgrade_id < 0:
-		print("Error: Invalid upgrade_id: ", upgrade_id)
+		
 		return "new_id"
 	
 
 	if upgrade_id == 7 and $player.can_dash == true:
-		print("new_id")
+		
 		return "new_id"
 	if $player.can_dash == false:
 		if (upgrade_id == 8 or upgrade_id == 9):
 				return "new_id"
 	
 	if button_position < 1 or button_position > 4:
-		print("Error: Invalid button_position: ", button_position, " (should be 1-4)")
 		return "new_position"
 	
 	
@@ -173,13 +174,13 @@ func set_upgrade_to_button(upgrade_id: int, button_position: int):
 		button_node.mouse_exited.connect(_on_upgrade_button_hover_exit.bind(button_node))
 
 	
-	print("Set upgrade '", upgrade_data.name, "' to button position ", button_position)
+	
 
 func _on_upgrade_button_hover_enter(button):
 	
 		
 	var upgrade_data = button.get_meta("upgrade_data")
-	print("Upgrade data: ", upgrade_data.name)
+	
 	
 	
 	var info_label = $player/shop/Info
@@ -187,7 +188,7 @@ func _on_upgrade_button_hover_enter(button):
 	if info_label:
 		
 		info_label.text = upgrade_data.name + "\n" + upgrade_data.description
-		print("Set info text to: ", info_label.text)
+		
 	else:
 		
 		var shop_node = button.get_parent()
@@ -248,7 +249,7 @@ func randomize_shop():
 	
 	while selected_upgrades.size() < 4:
 		if available_upgrades.is_empty():
-			print("Warning: Ran out of upgrades to pick from — rerolling entire shop.")
+			
 			available_upgrades = range(upgrades_list.size())
 			available_upgrades.shuffle()
 			
@@ -261,11 +262,9 @@ func randomize_shop():
 		var upgrade_data = upgrades_list[upgrade_id]
 		
 		if upgrade_data["effect"] == "Dash" and player.can_dash:
-			print("Skipping Dash unlock - already unlocked")
 			continue 
 	
 		if not player.can_dash and ("dash_speed" in upgrade_data["effect"] or "dash_cooldown" in upgrade_data["effect"]):
-			print("Skipping dash upgrade - player doesn't have dash yet. Effect: ", upgrade_data["effect"])
 			continue  
 		
 		var button_position = selected_upgrades.size() + 1
@@ -273,12 +272,10 @@ func randomize_shop():
 		
 
 		if result == "new_id":
-			print("set_upgrade_to_button rejected upgrade_id: ", upgrade_id)
 			continue
 		
 		selected_upgrades.append(upgrade_id)
 	
-	print("Shop randomized successfully with valid upgrades.")
 
 
 
@@ -295,7 +292,7 @@ func _on_upgrade_button_pressed(button):
 		
 		apply_upgrade_effect(upgrade_data.effect)
 		
-		print("Purchased: ", upgrade_data.name)
+		
 		
 		nextWave()
 		
@@ -321,7 +318,7 @@ func apply_upgrade_effect(effect: String):
 		"firerate":
 			
 			if $player/gun.firerate > 0.01:
-				$player/gun.firerate -= 0.01
+				$player/gun.firerate -= 0.05
 			
 		"Dash":
 			get_player().can_dash = true
@@ -332,8 +329,9 @@ func apply_upgrade_effect(effect: String):
 			print("Dash speed: " + str(get_player().dash_speed))
 			
 		"towers":
-			towers += 1
-			print("towers")
+			if towers <= MAX_TOWERS:
+				towers += 1
+				print("towers")
 		
 		"piercing":
 			$player/gun.piercing += 1
@@ -493,12 +491,12 @@ func shop():
 func _on_continue_pressed() -> void:
 	pause()
 
-func gameover():
+func game_over():
 	get_tree().paused = true
 	$player/gameover.visible = true
 
 func _on_player_i_died() -> void:
-	gameover()
+	game_over()
 func _on_quit_pressed() -> void:
 	print("Quit")
 func _on_restart_pressed() -> void:
@@ -554,7 +552,7 @@ func spawn_towers(number_of_towers):
 			tower_positions.append(new_position)
 			add_child(tower_instantiated)
 		else:
-			print("Warning: Could not find valid position for tower after ", max_attempts, " attempts")
+			
 			tower_instantiated.queue_free() 
 
 var ParticleScene = preload("res://scenes/particles.tscn")
@@ -574,9 +572,7 @@ func spawn_particles(pos: Vector2) -> void:
 
 
 func _on_timer_timeout() -> void:
-	print("game_over")
-
-
+	game_over()
 
 
 

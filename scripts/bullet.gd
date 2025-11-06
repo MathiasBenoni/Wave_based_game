@@ -11,6 +11,9 @@ var piercing = 1
 func bullet():
 	pass
 
+func _ready() -> void:
+	$MeshInstance2D.modulate = Color(0, 0, 0)
+
 func _process(delta: float) -> void:
 	
 	

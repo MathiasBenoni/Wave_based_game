@@ -108,9 +108,7 @@ func attack():
 			player_minuslife()
 	
 	await $attack_anim.animation_looped
-	
-	
-	
+
 	is_attacking = false
 	$attack_anim.stop()
 
