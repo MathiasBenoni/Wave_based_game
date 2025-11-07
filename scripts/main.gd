@@ -491,12 +491,13 @@ func shop():
 func _on_continue_pressed() -> void:
 	pause()
 
-func game_over():
+func game_over(text):
 	get_tree().paused = true
 	$player/gameover.visible = true
+	$player/gameover/VBoxContainer/Label.text = text
 
 func _on_player_i_died() -> void:
-	game_over()
+	game_over("You died")
 func _on_quit_pressed() -> void:
 	print("Quit")
 func _on_restart_pressed() -> void:
@@ -562,6 +563,9 @@ func minus_base_life():
 	$base.health = base_health
 	print(base_health)
 	
+	if base_health == 0:
+		game_over("Your base died")
+	
 	spawn_particles($base.position)
 	
 func spawn_particles(pos: Vector2) -> void:
@@ -572,7 +576,7 @@ func spawn_particles(pos: Vector2) -> void:
 
 
 func _on_timer_timeout() -> void:
-	game_over()
+	game_over("You ran out of time")
 
 
 

@@ -210,7 +210,7 @@ func start_invincibility():
 
 func die():
 	print("Player died!")
-	get_tree().get_root().get_node("main").gameover()
+	get_tree().get_root().get_node("main").game_over("You died")
 
 func handle_movement_with_collide(delta: float):
 	var input_vector = Vector2.ZERO
