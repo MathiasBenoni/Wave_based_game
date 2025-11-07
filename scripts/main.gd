@@ -475,7 +475,7 @@ func post_wave():
 	
 
 func shop():
-	
+	$player/post_wave/Label.visible = false
 	$player/post_wave.visible = false
 	$player/CanvasLayer.visible = false
 	$Timer.stop()
